@@ -1,3 +1,5 @@
+If you have any problem with 'nmp start', try to delete package-lock and do 'npm-install' again. Another option is to do this wit haddition of clearing cache by npm 'npm cache clean --force'
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
