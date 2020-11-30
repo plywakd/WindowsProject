@@ -1,20 +1,23 @@
 import React, {Component} from 'react';
 
-class App extends Component{
+class Content extends React.Component{
 
 	constructor(props) {
 		super(props);
 		this.state = {
+
 		}
 	}
-	
+
 	componentDidMount() {
-	
+	    console.log("Content component");
 	}
-	
+
 	render() {
 		return (
-			<React.Fragment>
-			
-			</React.Fragment>
+			<Content/>
+		);
 	}
+}
+
+export {Content};

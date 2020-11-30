@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './mainmenu.css';
 
-class Main extends React.Component {
+class MainMenu extends React.Component {
     constructor(props) {
         super(props);
         this.wpmString = " words/min";
@@ -75,9 +75,5 @@ class Main extends React.Component {
     }
 }
 
-// ========================================
+export {MainMenu};
 
-ReactDOM.render(
-    <Main />,
-    document.getElementById('root')
-);
