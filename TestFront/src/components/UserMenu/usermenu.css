@@ -1,5 +1,6 @@
 .user-menu-container{
     margin: 5px 5px 5px 5px;
-	border: 1px solid black;
+	border: 1px solid red;
 	border-radius: 5px;
+	flex-grow:1;
 }

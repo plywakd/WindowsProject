@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-//import './usermenu.css'
+import './usermenu.css'
 
 class UserMenu extends React.Component{
 
@@ -16,8 +16,8 @@ class UserMenu extends React.Component{
 
 	render() {
 		return (
-			<div>
-				<h4>"Hello from userMenu</h4>
+			<div className="user-menu-container">
+				<h4>Hello from userMenu</h4>
 			</div>
 		);
 	}

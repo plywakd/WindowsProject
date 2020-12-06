@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {UserMenu} from './components/UserMenu/UserMenu';
 import {Content} from './components/Content/Content';
-import {MainMenu} from './components/MainMenu/MainMenu';
+import {Toolbar} from './components/Toolbar/Toolbar';
+import './app.css';
 
 class App extends Component{
 
@@ -21,10 +22,14 @@ class App extends Component{
 	render() {
 		return (
 			<React.Fragment>
-				<div>
-					<h3>"Hello"</h3>
-					<UserMenu></UserMenu>
-					<MainMenu></MainMenu>
+				<div className="main-container">
+					<div className="row-container">
+						<Toolbar></Toolbar>
+					</div>
+					<div className="row-container">
+						<UserMenu></UserMenu>
+						<Content></Content>
+					</div>
 				</div>
 			</React.Fragment>
 		);
