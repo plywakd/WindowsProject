@@ -36,12 +36,12 @@ class App extends Component{
 	
 	handleLaunchGame() {
 		console.log("Game start");
-		this.setState({launchGame : true}, this.setState({content : <Content launchGame={this.state.launchGame}></Content>}));
+		this.setState({launchGame : true}, () => this.setState({content : <Content launchGame={this.state.launchGame}></Content>}));
 	}
 	
 	handleRanking() {
 		console.log("Ranking start");
-		this.setState({showRanking : true}, this.setState({content : <Content showRanking={this.state.showRanking}></Content>}));
+		this.setState({showRanking : true},() => this.setState({content : <Content showRanking={this.state.showRanking}></Content>}));
 	}
 	
 	render() {
