@@ -14,6 +14,8 @@ class App extends Component{
             username : "",
             password : "",
             isLogged : false,
+			launchGame : false,
+			showRanking : false,
 			tmp : null,
 			content : null
 		}
@@ -28,16 +30,18 @@ class App extends Component{
 	
 	handleLogin() {
 		console.log("Login");
-		this.setState({username : "Login test"});
 		this.setState({content : <Content login={this.state.isLogged}></Content>});
+		this.setState({isLogged: true});
 	}
 	
 	handleLaunchGame() {
 		console.log("Game start");
+		this.setState({launchGame : true}, this.setState({content : <Content launchGame={this.state.launchGame}></Content>}));
 	}
 	
 	handleRanking() {
 		console.log("Ranking start");
+		this.setState({showRanking : true}, this.setState({content : <Content showRanking={this.state.showRanking}></Content>}));
 	}
 	
 	render() {
