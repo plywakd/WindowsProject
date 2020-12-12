@@ -15,27 +15,15 @@ class UserMenu extends React.Component{
 	componentDidMount() {
 	    console.log("Loaded userMenu");
 	}
-	
-	handleLogin() {
-		
-	}
-	
-	handleLaunchGame() {
-		
-	}
-	
-	handleRanking() {
-		
-	}
 
 	render() {
 		return (
 			<div className="user-menu-container">
 				<h4>Hello from userMenu</h4>
 				<div className="btn-container">
-					<Button variant="dark" onClick={this.handleLogin}>Login</Button>
-					<Button variant="dark" onClick={this.handleLaunchGame}>Train Game!</Button>
-					<Button variant="dark" onClick={this.handleRanking}>Ranking</Button>
+					<Button variant="dark" onClick={this.props.handleLogin}>Login</Button>
+					<Button variant="dark" onClick={this.props.handleLaunchGame}>Train Game!</Button>
+					<Button variant="dark" onClick={this.props.handleRanking}>Ranking</Button>
 				</div>
 			</div>
 		);
