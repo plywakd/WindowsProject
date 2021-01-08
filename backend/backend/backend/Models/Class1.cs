@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
 namespace backend.Models
 {
-    public class Employee
+    public class AccountContext : DbContext
     {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public DateTime JoiningDate { get; set; }
-        public int Age { get; set; }
+        public DbSet<Account> accounts { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder.UseNpgsql("Host=my_host;Database=my_db;Username=my_user;Password=my_pw");
     }
 }
