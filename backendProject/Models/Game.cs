@@ -7,13 +7,13 @@ namespace backendProject.Models
 {
     public class Game
     {
-        private int gameId { get; set; }
-        private String gameName { set; get; }
-        private WritingText textToWrite { set; get; }
-        private int wordCount { set; get; }
-        private double minWordspeed { set; get; }
-        private int maxMistakes { set; get; }
-        private Difficulty difficulty { set; get; }
+        public int GameID { get; set; }
+        public String gameName { set; get; }
+        public WritingText textToWrite { set; get; }
+        public int wordCount { set; get; }
+        public double minWordspeed { set; get; }
+        public int maxMistakes { set; get; }
+        public Difficulty difficulty { set; get; }
 
     }
 

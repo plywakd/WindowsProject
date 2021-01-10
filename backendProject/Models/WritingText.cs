@@ -7,11 +7,11 @@ namespace backendProject.Models
 {
     public class WritingText
     {
-        private int writinTextId { get; set; }
-        private String text { set; get; }
-        private String source { set; get; }
-        private double topSpeed { set; get; }
-        private double averageSpeed { set; get; }
+        public int WritingTextID { get; set; }
+        public String text { set; get; }
+        public String source { set; get; }
+        public double topSpeed { set; get; }
+        public double averageSpeed { set; get; }
 
         public void updateTopSpeed()
         {

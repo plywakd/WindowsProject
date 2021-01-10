@@ -7,13 +7,13 @@ namespace backendProject.Models
 {
     public class Result
     {
-        private int resultId { get; set; }
-        private Game game { get; set; }
-        private double wordSpeed { get; set; }
+        public int ResultID { get; set; }
+        public Game game { get; set; }
+        public double wordSpeed { get; set; }
 
-        private Account account { get; set; }
-        private DateTime finish_date { get; set; }
-        private Boolean isPassed { get; set; }
-        private List<String> mistakes { get; set; }
+        public Account account { get; set; }
+        public DateTime finish_date { get; set; }
+        public Boolean isPassed { get; set; }
+        public List<String> mistakes { get; set; }
     }
 }
