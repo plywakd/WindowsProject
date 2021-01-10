@@ -24,15 +24,15 @@ namespace backendProject.Controllers
             return _context.WritingTexts.ToList();
         }
 
-        [HttpGet("/[controller]/add/{username}/{password}")]
-        public string Add(string username, string password)
+        [HttpGet("/[controller]/add/{text}/{source}")]
+        public string Add(string text, string source)
         {
             try
             {
-                WritingText acc = new WritingText(username, password);
-                _context.WritingTexts.Add(acc);
+                WritingText wt = new WritingText(text, source);
+                _context.WritingTexts.Add(wt);
                 _context.SaveChanges();
-                return String.Format("User - {0} - added", acc.Username);
+                return String.Format("WritingText - {0} - added", wt.ID);
             }catch(Exception e)
             {
                 return e.Message;
@@ -44,7 +44,7 @@ namespace backendProject.Controllers
         {
             try
             {
-                return _context.Accounts.Find(id).ToString();
+                return _context.WritingTexts.Find(id).ToString();
             }
             catch (Exception e)
             {
@@ -52,48 +52,60 @@ namespace backendProject.Controllers
             }
         }
 
-        [HttpPost("/[controller]/add/{username}/{password}")]
-        public string Add(string username, string password)
-        {
-            try
-            {
-                Account acc = new Account(username, password);
-                _context.Accounts.Add(acc);
-                _context.SaveChanges();
-                return String.Format("User - {0} - added", acc.Username);
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-        }
 
         [HttpDelete("/[controller]/delete/{id}")]
         public string Delete(int id)
         {
             try
             {
-                Account acc = _context.Accounts.Find(id);
-                _context.Accounts.Remove(acc);
+                WritingText wt = _context.WritingTexts.Find(id);
+                _context.WritingTexts.Remove(wt);
                 _context.SaveChanges();
-                return String.Format("User - {0} - removed", acc.Username);
+                return String.Format("WritingText - {0} - removed", wt.ID);
             }
             catch (Exception e) { return e.Message; }
         }
 
-        [HttpPost("/[controller]/update/{id}/{username}/{password}")]
-        public string Update(int id, string username, string password)
+        [HttpPost("/[controller]/update/{id}/{text}/{source}")]
+        public string Update(int id, string text, string source)
         {
             try
             {
-                Account acc = _context.Accounts.Find(id);
-                acc.Username = username;
-                acc.Password = password;
-                _context.Accounts.Update(acc);
+                WritingText wt = _context.WritingTexts.Find(id);
+                wt.text = text;
+                wt.source = source;
+                _context.WritingTexts.Update(wt);
                 _context.SaveChanges();
-                return String.Format("User - {0} - updated", acc.Username);
+                return String.Format("WritingText - {0} - updated", wt.ID);
             }
             catch (Exception e) { return e.Message; }
+        }
+
+        [HttpPost("/[controller]/updateSpeeds/{id}")]
+        public string UpdateSpeeds(int id)
+        {
+            try
+            {
+                WritingText wt = _context.WritingTexts.Find(id);
+                wt.topSpeed = getTopSpeed(id);
+                wt.averageSpeed = getAvgSpeed(id);
+                _context.WritingTexts.Update(wt);
+                _context.SaveChanges();
+                return String.Format("WritingText - {0} - updated", wt.ID);
+            }
+            catch (Exception e) { return e.Message; }
+        }
+
+        private double getAvgSpeed(int textID)
+        {
+            double sumSpeed = _context.Results.ToList().Aggregate(0.0d, (acc, x) => acc + x.wordSpeed);
+            double resultSpeed = sumSpeed / _context.Results.ToList().Count();
+            return resultSpeed;
+        }
+
+        private double getTopSpeed(int textID)
+        {
+            return _context.Results.ToList().Max(r => r.wordSpeed);
         }
 
 

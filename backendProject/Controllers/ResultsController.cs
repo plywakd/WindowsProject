@@ -24,15 +24,15 @@ namespace backendProject.Controllers
             return _context.Results.ToList();
         }
 
-        [HttpGet("/[controller]/add/{username}/{password}")]
-        public string Add(string username, string password)
+        [HttpGet("/[controller]/add/{gameID}/{ws}/{accID}/{m}")]
+        public string Add(int gameID, double ws, int accID, int m)
         {
             try
             {
-                Result acc = new Result(username, password);
-                _context.Results.Add(acc);
+                Result result = new Result(_context.Games.Find(gameID), ws, _context.Accounts.Find(accID), DateTime.Now  , m);
+                _context.Results.Add(result);
                 _context.SaveChanges();
-                return String.Format("User - {0} - added", acc.Username);
+                return String.Format("Result - {0} - added", result.ID);
             }catch(Exception e)
             {
                 return e.Message;
@@ -44,7 +44,7 @@ namespace backendProject.Controllers
         {
             try
             {
-                return _context.Accounts.Find(id).ToString();
+                return _context.Results.Find(id).ToString();
             }
             catch (Exception e)
             {
@@ -52,20 +52,22 @@ namespace backendProject.Controllers
             }
         }
 
-        [HttpPost("/[controller]/add/{username}/{password}")]
-        public string Add(string username, string password)
+        [HttpPost("/[controller]/player/{accId}")]
+        public List<Result> ForAccount(int accId)
         {
-            try
-            {
-                Account acc = new Account(username, password);
-                _context.Accounts.Add(acc);
-                _context.SaveChanges();
-                return String.Format("User - {0} - added", acc.Username);
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
+            return (List<Result>)_context.Results.ToList().Where(r => r.account == _context.Accounts.Find(accId));
+        }
+
+        [HttpPost("/[controller]/player/{accId}/{passed}")]
+        public List<Result> ForAccountPassed(int accId, bool passed)
+        {
+            return (List<Result>)ForAccount(accId).Where(r => r.isPassed == passed);
+        }
+
+        [HttpPost("/[controller]/player/{accId}/{date1}/{date2}")]
+        public List<Result> ForAccountBetweenDates(int accId, DateTime date1, DateTime date2)
+        {
+            return (List<Result>)ForAccount(accId).Where(r => r.finish_date >= date1 && r.finish_date <= date2);
         }
 
         [HttpDelete("/[controller]/delete/{id}")]
@@ -73,25 +75,10 @@ namespace backendProject.Controllers
         {
             try
             {
-                Account acc = _context.Accounts.Find(id);
-                _context.Accounts.Remove(acc);
+                Result result = _context.Results.Find(id);
+                _context.Results.Remove(result);
                 _context.SaveChanges();
-                return String.Format("User - {0} - removed", acc.Username);
-            }
-            catch (Exception e) { return e.Message; }
-        }
-
-        [HttpPost("/[controller]/update/{id}/{username}/{password}")]
-        public string Update(int id, string username, string password)
-        {
-            try
-            {
-                Account acc = _context.Accounts.Find(id);
-                acc.Username = username;
-                acc.Password = password;
-                _context.Accounts.Update(acc);
-                _context.SaveChanges();
-                return String.Format("User - {0} - updated", acc.Username);
+                return String.Format("Result - {0} - removed", result.ID);
             }
             catch (Exception e) { return e.Message; }
         }

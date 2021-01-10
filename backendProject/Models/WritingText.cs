@@ -12,19 +12,26 @@ namespace backendProject.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
-        public String text { set; get; }
-        public String source { set; get; }
+        public string text { set; get; }
+        public string source { set; get; }
+        public int wordCount { set; get; }
         public double topSpeed { set; get; }
         public double averageSpeed { set; get; }
 
-        public void updateTopSpeed(double newTopSpeed)
+        public WritingText() { }
+        public WritingText(string t, string s)
         {
-            topSpeed = newTopSpeed;
+            text = t;
+            source = s;
+            wordCount = countWords();
+            topSpeed = 0;
+            averageSpeed = 0;
         }
 
-        public void updateAverageSpeed(double newAverageSpeed)
+        public int countWords()
         {
-            averageSpeed = newAverageSpeed;
+            return text.Count(c => c == ' ') + 1;
         }
+
     }
 }

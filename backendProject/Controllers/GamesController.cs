@@ -24,15 +24,15 @@ namespace backendProject.Controllers
             return _context.Games.ToList();
         }
 
-        [HttpGet("/[controller]/add/{username}/{password}")]
-        public string Add(string username, string password)
+        [HttpGet("/[controller]/add/{gameName}/{textID}/{diff}")]
+        public string Add(string gameName, int textID, int diff)
         {
             try
             {
-                Game acc = new Game(username, password);
-                _context.Games.Add(acc);
+                Game game = new Game(gameName, _context.WritingTexts.Find(textID), (Difficulty)diff);
+                _context.Games.Add(game);
                 _context.SaveChanges();
-                return String.Format("User - {0} - added", acc.Username);
+                return String.Format("Game - {0}{1} - added", game.gameName, game.ID);
             }catch(Exception e)
             {
                 return e.Message;
@@ -52,46 +52,31 @@ namespace backendProject.Controllers
             }
         }
 
-        [HttpPost("/[controller]/add/{username}/{password}")]
-        public string Add(string username, string password)
-        {
-            try
-            {
-                Game acc = new Game(username, password);
-                _context.Games.Add(acc);
-                _context.SaveChanges();
-                return String.Format("User - {0} - added", acc.Username);
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-        }
-
         [HttpDelete("/[controller]/delete/{id}")]
         public string Delete(int id)
         {
             try
             {
-                Game acc = _context.Games.Find(id);
-                _context.Games.Remove(acc);
+                Game game = _context.Games.Find(id);
+                _context.Games.Remove(game);
                 _context.SaveChanges();
-                return String.Format("User - {0} - removed", acc.Username);
+                return String.Format("Game - {0}{1} - removed", game.gameName, game.ID);
             }
             catch (Exception e) { return e.Message; }
         }
 
-        [HttpPost("/[controller]/update/{id}/{username}/{password}")]
-        public string Update(int id, string username, string password)
+        [HttpPost("/[controller]/update/{id}/{name}/{textID}/{diff}")]
+        public string Update(int id, string name, int textID, int diff)
         {
             try
             {
-                Game acc = _context.Games.Find(id);
-                acc.Username = username;
-                acc.Password = password;
-                _context.Games.Update(acc);
+                Game game = _context.Games.Find(id);
+                game.gameName = name;
+                game.textToWrite = _context.WritingTexts.Find(textID);
+                game.difficulty = (Difficulty)diff;
+                _context.Games.Update(game);
                 _context.SaveChanges();
-                return String.Format("User - {0} - updated", acc.Username);
+                return String.Format("Game - {0}{1} - updated", game.gameName, game.ID);
             }
             catch (Exception e) { return e.Message; }
         }

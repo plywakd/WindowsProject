@@ -16,7 +16,18 @@ namespace backendProject.Models
         public double wordSpeed { get; set; }
         public Account account { get; set; }
         public DateTime finish_date { get; set; }
-        public Boolean isPassed { get; set; }
-        public List<String> mistakes { get; set; }
+        public bool isPassed { get; set; }
+        public int mistakes { get; set; }
+
+        public Result() { }
+        public Result(Game g, double ws, Account acc, DateTime fd, int m) 
+        {
+            game = g;
+            wordSpeed = ws;
+            account = acc;
+            finish_date = fd;
+            mistakes = m;
+            isPassed = ws >= game.minWordspeed && mistakes <= game.maxMistakes;
+        }
     }
 }
