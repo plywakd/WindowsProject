@@ -9,7 +9,7 @@ namespace backendProject.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+           /* migrationBuilder.CreateTable(
                 name: "Account",
                 columns: table => new
                 {
@@ -108,7 +108,7 @@ namespace backendProject.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Result_GameID",
                 table: "Result",
-                column: "GameID");
+                column: "GameID");*/
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

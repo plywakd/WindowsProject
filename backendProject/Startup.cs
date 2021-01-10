@@ -25,6 +25,7 @@ namespace backendProject
             services.AddDbContext<Context>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllersWithViews();
 
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

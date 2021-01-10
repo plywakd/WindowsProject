@@ -37,16 +37,16 @@ namespace backendProject.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("/[controller]/get/{words}")]
         public IEnumerable<String> Get(int words)
         {
             return callurl(words).ToArray();
         }
 
-        [HttpGet("/[controller]/save/{id}/{name}/{password}")]
+        [HttpGet("/[controller]/save/{name}/{password}")]
         public string Save(int id, string name, string password)
         {
-            Account acc = new Account(id, name, password);
+            Account acc = new Account(name, password);
             context.Accounts.Add(acc);
             context.SaveChanges();
             return "Account added";

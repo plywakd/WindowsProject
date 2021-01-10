@@ -16,7 +16,7 @@ namespace backendProject
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            CreateDbIfNotExists(host);
+            //CreateDbIfNotExists(host);
             CreateHostBuilder(args).Build().Run();
         }
 
