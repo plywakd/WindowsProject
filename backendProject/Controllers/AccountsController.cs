@@ -24,7 +24,7 @@ namespace backendProject.Controllers
             return _context.Accounts.ToList();
         }
 
-        [HttpPost("/[controller]/find/{id}")]
+        [HttpGet("/[controller]/find/{id}")]
         public string Find(int id)
         {
             try
@@ -66,7 +66,7 @@ namespace backendProject.Controllers
             catch (Exception e) { return e.Message; }
         }
 
-        [HttpPost("/[controller]/update/{id}/{username}/{password}")]
+        [HttpPut("/[controller]/update/{id}/{username}/{password}")]
         public string Update(int id, string username, string password)
         {
             try

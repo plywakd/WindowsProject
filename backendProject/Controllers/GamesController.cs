@@ -24,7 +24,7 @@ namespace backendProject.Controllers
             return _context.Games.ToList();
         }
 
-        [HttpGet("/[controller]/add/{gameName}/{textID}/{diff}")]
+        [HttpPost("/[controller]/add/{gameName}/{textID}/{diff}")]
         public string Add(string gameName, int textID, int diff)
         {
             try
@@ -39,7 +39,7 @@ namespace backendProject.Controllers
             }
         }
 
-        [HttpPost("/[controller]/find/{id}")]
+        [HttpGet("/[controller]/find/{id}")]
         public string Find(int id)
         {
             try
@@ -65,7 +65,7 @@ namespace backendProject.Controllers
             catch (Exception e) { return e.Message; }
         }
 
-        [HttpPost("/[controller]/update/{id}/{name}/{textID}/{diff}")]
+        [HttpPut("/[controller]/update/{id}/{name}/{textID}/{diff}")]
         public string Update(int id, string name, int textID, int diff)
         {
             try

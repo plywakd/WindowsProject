@@ -24,7 +24,7 @@ namespace backendProject.Controllers
             return _context.Results.ToList();
         }
 
-        [HttpGet("/[controller]/add/{gameID}/{ws}/{accID}/{m}")]
+        [HttpPost("/[controller]/add/{gameID}/{ws}/{accID}/{m}")]
         public string Add(int gameID, double ws, int accID, int m)
         {
             try
@@ -39,7 +39,7 @@ namespace backendProject.Controllers
             }
         }
 
-        [HttpPost("/[controller]/find/{id}")]
+        [HttpGet("/[controller]/find/{id}")]
         public string Find(int id)
         {
             try
@@ -52,19 +52,19 @@ namespace backendProject.Controllers
             }
         }
 
-        [HttpPost("/[controller]/player/{accId}")]
+        [HttpGet("/[controller]/player/{accId}")]
         public List<Result> ForAccount(int accId)
         {
             return (List<Result>)_context.Results.ToList().Where(r => r.account == _context.Accounts.Find(accId));
         }
 
-        [HttpPost("/[controller]/player/{accId}/{passed}")]
+        [HttpGet("/[controller]/player/{accId}/{passed}")]
         public List<Result> ForAccountPassed(int accId, bool passed)
         {
             return (List<Result>)ForAccount(accId).Where(r => r.isPassed == passed);
         }
 
-        [HttpPost("/[controller]/player/{accId}/{date1}/{date2}")]
+        [HttpGet("/[controller]/player/{accId}/{date1}/{date2}")]
         public List<Result> ForAccountBetweenDates(int accId, DateTime date1, DateTime date2)
         {
             return (List<Result>)ForAccount(accId).Where(r => r.finish_date >= date1 && r.finish_date <= date2);

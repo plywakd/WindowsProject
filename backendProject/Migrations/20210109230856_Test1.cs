@@ -9,7 +9,7 @@ namespace backendProject.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-           /* migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Account",
                 columns: table => new
                 {
@@ -33,6 +33,7 @@ namespace backendProject.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     text = table.Column<string>(type: "text", nullable: true),
                     source = table.Column<string>(type: "text", nullable: true),
+                    wordCount = table.Column<int>(type: "integer", nullable: false),
                     topSpeed = table.Column<double>(type: "double precision", nullable: false),
                     averageSpeed = table.Column<double>(type: "double precision", nullable: false)
                 },
@@ -76,7 +77,7 @@ namespace backendProject.Migrations
                     accountID = table.Column<int>(type: "integer", nullable: true),
                     finish_date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     isPassed = table.Column<bool>(type: "boolean", nullable: false),
-                    mistakes = table.Column<List<string>>(type: "text[]", nullable: true)
+                    mistakes = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -108,7 +109,7 @@ namespace backendProject.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Result_GameID",
                 table: "Result",
-                column: "GameID");*/
+                column: "GameID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

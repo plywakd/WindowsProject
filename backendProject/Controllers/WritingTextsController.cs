@@ -24,7 +24,7 @@ namespace backendProject.Controllers
             return _context.WritingTexts.ToList();
         }
 
-        [HttpGet("/[controller]/add/{text}/{source}")]
+        [HttpPost("/[controller]/add/{text}/{source}")]
         public string Add(string text, string source)
         {
             try
@@ -39,7 +39,7 @@ namespace backendProject.Controllers
             }
         }
 
-        [HttpPost("/[controller]/find/{id}")]
+        [HttpGet("/[controller]/find/{id}")]
         public string Find(int id)
         {
             try
@@ -66,7 +66,7 @@ namespace backendProject.Controllers
             catch (Exception e) { return e.Message; }
         }
 
-        [HttpPost("/[controller]/update/{id}/{text}/{source}")]
+        [HttpPut("/[controller]/update/{id}/{text}/{source}")]
         public string Update(int id, string text, string source)
         {
             try
@@ -81,7 +81,7 @@ namespace backendProject.Controllers
             catch (Exception e) { return e.Message; }
         }
 
-        [HttpPost("/[controller]/updateSpeeds/{id}")]
+        [HttpPut("/[controller]/updateSpeeds/{id}")]
         public string UpdateSpeeds(int id)
         {
             try

@@ -14,6 +14,7 @@ namespace backendProject.Models
         public int ID { get; set; }
         public string gameName { set; get; }
         public WritingText textToWrite { set; get; }
+        public int wordCount { set; get; }
         public double minWordspeed { set; get; }
         public int maxMistakes { set; get; }
         public Difficulty difficulty { set; get; }

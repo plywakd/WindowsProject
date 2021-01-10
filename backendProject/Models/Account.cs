@@ -29,5 +29,9 @@ namespace backendProject.Models
 
         public Account() { }
 
+        public override string ToString()
+        {
+            return "Account : " + Username + ", created at: "+ Created + ", last logged: "+Last_logged;
+        }
     }
 }
