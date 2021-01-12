@@ -25,7 +25,7 @@ namespace backendProject.Controllers
         }
 
         [HttpGet("/[controller]/find/{id}")]
-        public string Find(int id)
+        public string FindById(int id)
         {
             try
             {
@@ -37,19 +37,34 @@ namespace backendProject.Controllers
             }
         }
 
+        [HttpGet("/[controller]/find/{username}")]
+        public string FindByUsername(string username)
+        {
+            try
+            {
+                // TODO change this to check if method found something, like optional in java
+                return _context.Accounts.Find(username).ToString();
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
+
         [HttpPost("/[controller]/add/{username}/{password}")]
-        public string Add(string username, string password)
+        public ActionResult Add(string username, string password)
         {
             try
             {
                 Account acc = new Account(username, password);
                 _context.Accounts.Add(acc);
                 _context.SaveChanges();
-                return String.Format("User - {0} - added", acc.Username);
+                //return String.Format("User - {0} - added", acc.Username);
+                return StatusCode(201);
             }
             catch (Exception e)
             {
-                return e.Message;
+                return StatusCode(404);
             }
         }
 

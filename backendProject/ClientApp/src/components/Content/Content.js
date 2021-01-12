@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './content.css';
+import axios from 'axios';
 
 class Content extends React.Component{
 
@@ -19,6 +20,7 @@ class Content extends React.Component{
 		}
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleRegister = this.handleRegister.bind(this);
 		this.loadGame = this.loadGame.bind(this);
 	}
 
@@ -38,12 +40,22 @@ class Content extends React.Component{
 	
 	handleSubmit(event) {
 		event.preventDefault();
-		const backend_url = 'localhost';
+		const backend_url = 'https://localhost:44306/Accounts/find/'
+		axios.get()
 		console.log("sending request to backend :");
 		console.log(this.state.username);
 		console.log(this.state.password);
 		const backend_response = true;
 		this.setState({isLogged : backend_response})
+	}
+
+
+	handleRegister(event) {
+		event.preventDefault();
+		const backend_url = 'https://localhost:44306/Accounts/add/'
+		axios.post(backend_url + this.state.username + "/" + this.state.password, {}).then(function (response) {
+			console.log(response);
+		})
 	}
 	
 	loadGame() {
@@ -54,23 +66,27 @@ class Content extends React.Component{
 
 	render() {
 		let subMenu;
+		let registerMenu;
 		if (this.state.isLogged === false) {
-			subMenu = 
+			subMenu =
 				(<Form>
-				  <Form.Group controlId="formBasicEmail">
-					<Form.Label>Username</Form.Label>
-					<Form.Control type="text" name="username" onChange={this.handleChange} placeholder="Enter username" />
-				  </Form.Group>
+					<Form.Group controlId="formBasicEmail">
+						<Form.Label>Username</Form.Label>
+						<Form.Control type="text" name="username" onChange={this.handleChange} placeholder="Enter username" />
+					</Form.Group>
 
-				  <Form.Group controlId="formBasicPassword">
-					<Form.Label>Password</Form.Label>
-					<Form.Control type="password" name="password" onChange={this.handleChange} placeholder="Password" />
-				  </Form.Group>
-				  
-				  <Button variant="primary" type="submit" onClick={this.handleSubmit}>
-					Submit
-				  </Button>
-				</Form>)
+					<Form.Group controlId="formBasicPassword">
+						<Form.Label>Password</Form.Label>
+						<Form.Control type="password" name="password" onChange={this.handleChange} placeholder="Password" />
+					</Form.Group>
+
+					<Button variant="primary" type="submit" onClick={this.handleSubmit}>
+						Login
+					</Button>
+					<Button variant="primary" type="submit" onClick={this.handleRegister}>
+						Register
+					</Button>
+				</Form>);
 		}
 		else {
 			subMenu = (
@@ -124,7 +140,8 @@ class Content extends React.Component{
 		}
 		return (
 			<div className="container">
-				{subMenu}	
+				<h2>Enter your username and password and if You have an account click login, else register</h2>
+				{subMenu}
 			</div>			
 		);
 	}
