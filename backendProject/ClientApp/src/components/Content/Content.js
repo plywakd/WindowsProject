@@ -16,7 +16,8 @@ class Content extends React.Component{
 			username : '',
 			password : '',
 			gameList : [],
-			game_tmp : false,
+			game_tmp: false,
+			results : [],
 		}
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -40,13 +41,13 @@ class Content extends React.Component{
 	
 	handleSubmit(event) {
 		event.preventDefault();
-		const backend_url = 'https://localhost:44306/Accounts/find/'
-		axios.get()
-		console.log("sending request to backend :");
-		console.log(this.state.username);
-		console.log(this.state.password);
-		const backend_response = true;
-		this.setState({isLogged : backend_response})
+		const backend_url = 'https://localhost:44306/Accounts/login/'
+		axios.get(backend_url + this.state.username).
+			then(response => {
+				console.log(response.status)
+				this.setState({ isLogged: response.status })
+			})
+
 	}
 
 
@@ -66,7 +67,6 @@ class Content extends React.Component{
 
 	render() {
 		let subMenu;
-		let registerMenu;
 		if (this.state.isLogged === false) {
 			subMenu =
 				(<Form>
@@ -100,9 +100,16 @@ class Content extends React.Component{
 			subMenu = backend_response.map((gameName) => <Button variant="primary" onClick={this.loadGame}>{gameName}</Button>);
 		}
 		
-		if(this.props.showRanking === true){
-			const backend_url = 'localhost';
-			console.log("sending request to backend :");
+		if (this.props.showRanking === true) {
+			//TODO change, request is being sent over and over
+			const backend_url = 'https://localhost:44306/Results';
+			axios.get(backend_url).
+				then(response => {
+					console.log(response.status)
+					console.log(response.data)
+					this.setState({ results: response.data })
+			})
+
 			subMenu = <Table responsive>
 						  <thead>
 							<tr>
@@ -132,7 +139,26 @@ class Content extends React.Component{
 							  ))}
 							</tr>
 						  </tbody>
-						</Table>
+			</Table>
+			const res = this.state.results;
+			//TODO create ranking based on results fields
+			let rank = <Table responsive>
+				<thead>
+					<tr>
+						<th>#</th>
+						{Array.from({ length: 12 }).map((_, index) => (
+							<th key={index}>Table heading</th>
+						))}
+					</tr>
+				</thead>
+				<tbody>
+					for(var index=0; index<res.length; index++) {
+						<tr>
+							<th>index</th>
+						</tr>
+					}
+				</tbody>
+			</Table>
 		}
 		
 		if(this.state.game_tmp === true){
@@ -140,7 +166,6 @@ class Content extends React.Component{
 		}
 		return (
 			<div className="container">
-				<h2>Enter your username and password and if You have an account click login, else register</h2>
 				{subMenu}
 			</div>			
 		);

@@ -25,7 +25,7 @@ namespace backendProject.Controllers
         }
 
         [HttpPost("/[controller]/add/{gameName}/{textID}/{diff}")]
-        public string Add(string gameName, int textID, int diff)
+        public string Add(string gameName, int textID, Difficulty diff)
         {
             try
             {

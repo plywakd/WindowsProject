@@ -37,17 +37,22 @@ namespace backendProject.Controllers
             }
         }
 
-        [HttpGet("/[controller]/find/{username}")]
-        public string FindByUsername(string username)
+        [HttpGet("/[controller]/login/{username}")]
+        public ActionResult LogInUser(string username)
         {
             try
             {
-                // TODO change this to check if method found something, like optional in java
-                return _context.Accounts.Find(username).ToString();
+                // TODO implement parsing parameters from json body request
+                Account acc = _context.Accounts.Where(s => s.Username.Equals(username)).FirstOrDefault();
+                if (acc != null)
+                {
+                    return StatusCode(200);
+                }
+                return StatusCode(404);
             }
             catch (Exception e)
             {
-                return e.Message;
+                return StatusCode(404);
             }
         }
 
