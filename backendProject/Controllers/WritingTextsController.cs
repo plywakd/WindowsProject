@@ -1,10 +1,8 @@
 ﻿using backendProject.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace backendProject.Controllers
 {
@@ -24,50 +22,43 @@ namespace backendProject.Controllers
             return _context.WritingTexts.ToList();
         }
 
-        [HttpPost("/[controller]/add/{text}/{source}")]
-        public string Add(string text, string source)
+        [HttpPost("/[controller]/add")]
+        public ActionResult Add(string text, string source)
         {
             try
             {
                 WritingText wt = new WritingText(text, source);
                 _context.WritingTexts.Add(wt);
                 _context.SaveChanges();
-                return String.Format("WritingText - {0} - added", wt.ID);
-            }catch(Exception e)
+                return StatusCode(200);
+            } catch
             {
-                return e.Message;
+                return StatusCode(404);
             }
         }
 
-        [HttpGet("/[controller]/find/{id}")]
-        public string Find(int id)
+        [HttpGet("/[controller]/find")]
+        public ActionResult<WritingText> Find(int id)
         {
-            try
-            {
-                return _context.WritingTexts.Find(id).ToString();
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
+                return _context.WritingTexts.Find(id);
         }
 
 
-        [HttpDelete("/[controller]/delete/{id}")]
-        public string Delete(int id)
+        [HttpDelete("/[controller]/delete")]
+        public ActionResult Delete(int id)
         {
             try
             {
                 WritingText wt = _context.WritingTexts.Find(id);
                 _context.WritingTexts.Remove(wt);
                 _context.SaveChanges();
-                return String.Format("WritingText - {0} - removed", wt.ID);
+                return StatusCode(200);
             }
-            catch (Exception e) { return e.Message; }
+            catch { return StatusCode(404); }
         }
 
-        [HttpPut("/[controller]/update/{id}/{text}/{source}")]
-        public string Update(int id, string text, string source)
+        [HttpPut("/[controller]/update")]
+        public ActionResult Update(int id, string text, string source)
         {
             try
             {
@@ -76,13 +67,13 @@ namespace backendProject.Controllers
                 wt.source = source;
                 _context.WritingTexts.Update(wt);
                 _context.SaveChanges();
-                return String.Format("WritingText - {0} - updated", wt.ID);
+                return StatusCode(200);
             }
-            catch (Exception e) { return e.Message; }
+            catch { return StatusCode(404); }
         }
 
-        [HttpPut("/[controller]/updateSpeeds/{id}")]
-        public string UpdateSpeeds(int id)
+        [HttpPut("/[controller]/updateSpeeds")]
+        public ActionResult UpdateSpeeds(int id)
         {
             try
             {
@@ -91,9 +82,9 @@ namespace backendProject.Controllers
                 wt.averageSpeed = getAvgSpeed(id);
                 _context.WritingTexts.Update(wt);
                 _context.SaveChanges();
-                return String.Format("WritingText - {0} - updated", wt.ID);
+                return StatusCode(200);
             }
-            catch (Exception e) { return e.Message; }
+            catch { return StatusCode(404); }
         }
 
         private double getAvgSpeed(int textID)

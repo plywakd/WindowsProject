@@ -19,25 +19,18 @@ namespace backendProject.Controllers
             _context = context;
         }
 
-        public List<Account> Index()
+        public ActionResult<IEnumerable<Account>> Index()
         {
             return _context.Accounts.ToList();
         }
 
-        [HttpGet("/[controller]/find/{id}")]
-        public string FindById(int id)
+        [HttpGet("/[controller]/find")]
+        public ActionResult<Account> FindById(int id)
         {
-            try
-            {
-                return _context.Accounts.Find(id).ToString();
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
+            return _context.Accounts.Find(id);
         }
 
-        [HttpGet("/[controller]/login/{username}")]
+        [HttpGet("/[controller]/login")]
         public ActionResult LogInUser(string username)
         {
             try
@@ -56,7 +49,7 @@ namespace backendProject.Controllers
             }
         }
 
-        [HttpPost("/[controller]/add/{username}/{password}")]
+        [HttpPost("/[controller]/add")]
         public ActionResult Add(string username, string password)
         {
             try
@@ -73,21 +66,24 @@ namespace backendProject.Controllers
             }
         }
 
-        [HttpDelete("/[controller]/delete/{id}")]
-        public string Delete(int id)
+        [HttpDelete("/[controller]/delete")]
+        public ActionResult Delete(int id)
         {
             try
             {
                 Account acc = _context.Accounts.Find(id);
                 _context.Accounts.Remove(acc);
                 _context.SaveChanges();
-                return String.Format("User - {0} - removed", acc.Username);
+                return StatusCode(200);
             }
-            catch (Exception e) { return e.Message; }
+            catch
+            {
+                return StatusCode(404);
+            }
         }
 
-        [HttpPut("/[controller]/update/{id}/{username}/{password}")]
-        public string Update(int id, string username, string password)
+        [HttpPut("/[controller]/update")]
+        public ActionResult Update(int id, string username, string password)
         {
             try
             {
@@ -96,9 +92,9 @@ namespace backendProject.Controllers
                 acc.Password = password;
                 _context.Accounts.Update(acc);
                 _context.SaveChanges();
-                return String.Format("User - {0} - updated", acc.Username);
+                return StatusCode(200);
             }
-            catch (Exception e) { return e.Message; }
+            catch { return StatusCode(404); }
         }
 
 

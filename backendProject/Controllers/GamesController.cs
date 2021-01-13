@@ -19,54 +19,43 @@ namespace backendProject.Controllers
             _context = context;
         }
 
-        public List<Game> Index()
+        public ActionResult<IEnumerable<Game>> Index()
         {
             return _context.Games.ToList();
         }
 
-        [HttpPost("/[controller]/add/{gameName}/{textID}/{diff}")]
-        public string Add(string gameName, int textID, Difficulty diff)
+        [HttpPost("/[controller]/add")]
+        public ActionResult Add(string gameName, int textID, Difficulty diff)
         {
             try
             {
                 Game game = new Game(gameName, _context.WritingTexts.Find(textID), (Difficulty)diff);
                 _context.Games.Add(game);
                 _context.SaveChanges();
-                return String.Format("Game - {0}{1} - added", game.gameName, game.ID);
-            }catch(Exception e)
-            {
-                return e.Message;
-            }
+                return StatusCode(200);
+            } catch { return StatusCode(404); }
         }
 
-        [HttpGet("/[controller]/find/{id}")]
-        public string Find(int id)
+        [HttpGet("/[controller]/find")]
+        public ActionResult<Game> Find(int id)
         {
-            try
-            {
-                return _context.Games.Find(id).ToString();
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
+                return _context.Games.Find(id);
         }
 
-        [HttpDelete("/[controller]/delete/{id}")]
-        public string Delete(int id)
+        [HttpDelete("/[controller]/delete")]
+        public ActionResult Delete(int id)
         {
             try
             {
                 Game game = _context.Games.Find(id);
                 _context.Games.Remove(game);
                 _context.SaveChanges();
-                return String.Format("Game - {0}{1} - removed", game.gameName, game.ID);
-            }
-            catch (Exception e) { return e.Message; }
+                return StatusCode(200);
+            } catch { return StatusCode(404); }
         }
 
-        [HttpPut("/[controller]/update/{id}/{name}/{textID}/{diff}")]
-        public string Update(int id, string name, int textID, int diff)
+        [HttpPut("/[controller]/update")]
+        public ActionResult Update(int id, string name, int textID, int diff)
         {
             try
             {
@@ -76,9 +65,9 @@ namespace backendProject.Controllers
                 game.difficulty = (Difficulty)diff;
                 _context.Games.Update(game);
                 _context.SaveChanges();
-                return String.Format("Game - {0}{1} - updated", game.gameName, game.ID);
+                return StatusCode(200);
             }
-            catch (Exception e) { return e.Message; }
+            catch { return StatusCode(404); }
         }
 
 
