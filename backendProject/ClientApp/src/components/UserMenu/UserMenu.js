@@ -22,8 +22,8 @@ class UserMenu extends React.Component{
 				<h4>Hello from userMenu</h4>
 				<div className="btn-container">
 					<Button variant="dark" onClick={this.props.handleLogin}>Login</Button>
-					<Button variant="dark" onClick={this.props.handleLaunchGame}>Train Game!</Button>
-					<Button variant="dark" onClick={this.props.handleRanking}>Ranking</Button>
+					<Button variant="dark" disabled={!this.props.isLogged} onClick={this.props.handleFetchGames}>Train Game!</Button>
+					<Button variant="dark" disabled={!this.props.isLogged} onClick={this.props.handleRanking}>Ranking</Button>
 				</div>
 			</div>
 		);
