@@ -21,7 +21,7 @@ namespace backendProject.Controllers
 
         public ActionResult<IEnumerable<Game>> Index()
         {
-            return _context.Games.ToList();
+            return _context.Games.Include(game => game.textToWrite).ToList();
         }
 
         [HttpPost("/[controller]/add")]
@@ -30,6 +30,7 @@ namespace backendProject.Controllers
             try
             {
                 Game game = new Game(gameName, _context.WritingTexts.Find(textID), (Difficulty)diff);
+                //_context.Entry(game).State = EntityState.Modified;
                 _context.Games.Add(game);
                 _context.SaveChanges();
                 return StatusCode(200);
@@ -39,7 +40,7 @@ namespace backendProject.Controllers
         [HttpGet("/[controller]/find")]
         public ActionResult<Game> Find(int id)
         {
-                return _context.Games.Find(id);
+            return _context.Games.Find(id);
         }
 
         [HttpDelete("/[controller]/delete")]
