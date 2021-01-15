@@ -12,12 +12,19 @@ class SubMenu extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-
+			game: {},
 		}
+		this.handleGame = this.handleGame.bind(this);
 	}
 
 	componentDidMount() {
 		console.log("SubMenu component");
+	}
+
+	handleGame = (xd) => {
+		this.setState({ game: xd }, () => {
+			console.log("hello, " + xd + "," + Object.keys(this.state.game).length);
+		});
 	}
 
 	render() {
@@ -49,10 +56,16 @@ class SubMenu extends React.Component {
 				<h2> Welcome {this.props.username} </h2>)
 		}
 
-		else if (this.props.isLogged === true && this.props.gameMenu === true) {
+		else if (this.props.isLogged === true && this.props.gameMenu === true && Object.keys(this.state.game).length == 0) {
 			console.log("check games: " + this.props.gameList);
-			subMenu = (this.props.gameList.map((item) => <Button variant="primary" onClick={this.props.handleGame(item.textToWrite)} key={item.id}>{item.gameName}</Button>));
+			subMenu = (this.props.gameList.map((item) => <Button variant="primary" onClick={() => this.handleGame(item)} key={item.id}>{item.gameName}</Button>));
 		}
+			//to do move handle game to submenu and operate on this states, content does not need to know all that stuff
+		//change gameLaunch prop
+		else if (this.props.isLogged === true && Object.keys(this.state.game).length != 0) {
+			subMenu = (
+				<MainMenu></MainMenu>);
+        }
 
 		else if (this.props.isLogged === true && this.props.launchGame === false && this.props.showRanking === true) {
 			const backend_url = 'https://localhost:44306/Results';

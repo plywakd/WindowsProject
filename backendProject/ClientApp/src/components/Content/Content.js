@@ -15,6 +15,7 @@ class Content extends React.Component{
 			password : '',
 			gameList : [],
 			gameMenu: false,
+			gameLauch: false,
 			results : [],
 		}
 		this.handleChange = this.handleChange.bind(this);
@@ -77,6 +78,8 @@ class Content extends React.Component{
 				console.log(response.data);
 				this.setState({
 					gameList: response.data
+				}, () => {
+						console.log("Data is ready");
 				})
 			});
     }
@@ -89,9 +92,9 @@ class Content extends React.Component{
 		event.preventDefault();
     }
 	
-	handleGame(event, textToWrite) {
-		event.preventDefault();
-		console.log(textToWrite);
+	handleGame = (xd) => {
+		console.log("hello, " + xd);
+		//this.setState({ gameLauch: true });
     }
 
 
@@ -99,7 +102,7 @@ class Content extends React.Component{
 		return (
 			<div className="row-container">
 				<UserMenu isLogged={this.state.isLogged} handleFetchGames={this.handleFetchGames} handleRanking={this.handleRanking} />
-				<SubMenu isLogged={this.state.isLogged} username={this.state.username} gameList={this.state.gameList} gameMenu={this.state.gameMenu} handleLogin={this.handleLogin} handleRegister={this.handleRegister} handleChange={this.handleChange} handleGame={this.handleGame} />
+				<SubMenu isLogged={this.state.isLogged} username={this.state.username} gameList={this.state.gameList} gameMenu={this.state.gameMenu} gameLauch={this.state.gameLauch} handleLogin={this.handleLogin} handleRegister={this.handleRegister} handleChange={this.handleChange} handleGame={this.handleGame} />
 			</div>			
 		);
 	}

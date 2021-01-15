@@ -23,10 +23,10 @@ class MainMenu extends React.Component {
             this.setState(state => ({
                 greenText: this.state.greenText + this.state.whiteText.charAt(0),
                 whiteText: this.state.whiteText.substring(1)}))
-            console.log("GreenText: " + this.state.greenText);
-            console.log("WhiteText: " + this.state.whiteText);
+            //console.log("GreenText: " + this.state.greenText);
+            //console.log("WhiteText: " + this.state.whiteText);
             if (input == ' ') {
-                console.log("Word typed in: " + ((window.performance && window.performance.now && window.performance.timing && window.performance.timing.navigationStart ? window.performance.now() + window.performance.timing.navigationStart : Date.now()) - this.state.time) + " Mseconds");
+                //console.log("Word typed in: " + ((window.performance && window.performance.now && window.performance.timing && window.performance.timing.navigationStart ? window.performance.now() + window.performance.timing.navigationStart : Date.now()) - this.state.time) + " Mseconds");
                 /*
                 this.setState(state => ({
                     seconds: this.state.ms + ((window.performance && window.performance.now && window.performance.timing && window.performance.timing.navigationStart ? window.performance.now() + window.performance.timing.navigationStart : Date.now()) - this.state.time),
@@ -58,7 +58,7 @@ class MainMenu extends React.Component {
 
                 var count = (this.state.greenText.match(/ /g) || []).length + 1;
                 var wordsPerMin = (count / this.state.ms) * 60000;
-                console.log("Words per minute: " + wordsPerMin);
+                //console.log("Words per minute: " + wordsPerMin);
             }
         }
         
