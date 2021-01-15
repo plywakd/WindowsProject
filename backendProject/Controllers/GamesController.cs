@@ -29,8 +29,9 @@ namespace backendProject.Controllers
         {
             try
             {
-                Game game = new Game(gameName, _context.WritingTexts.Find(textID), (Difficulty)diff);
-                //_context.Entry(game).State = EntityState.Modified;
+                WritingText textToAdd = _context.WritingTexts.Find(textID);
+                Game game = new Game(gameName, textToAdd, (Difficulty)diff);
+                game.wordCount = textToAdd.wordCount;
                 _context.Games.Add(game);
                 _context.SaveChanges();
                 return StatusCode(200);
