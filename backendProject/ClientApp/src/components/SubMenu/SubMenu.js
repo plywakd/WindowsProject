@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import './SubMenu.css';
 
 class SubMenu extends React.Component {
 
@@ -17,11 +18,11 @@ class SubMenu extends React.Component {
 
 	componentDidMount() {
 		console.log("SubMenu component");
-		console.log("logged? "+this.props.isLogged);
 	}
 
 	render() {
 		let subMenu;
+		console.log(this.props);
 		if (this.props.isLogged === false) {
 			subMenu =
 				(<Form>
@@ -43,18 +44,17 @@ class SubMenu extends React.Component {
 					</Button>
 				</Form>);
 		}
-		else {
+		else if (this.props.isLogged === true && this.props.gameMenu===false){
 			subMenu = (
 				<h2> Welcome {this.props.username} </h2>)
 		}
 
-		if (this.props.launchGame === true) {
+		else if (this.props.isLogged === true && this.props.gameMenu === true) {
 			console.log("check games: " + this.props.gameList);
-			// subMenu = backend_response.map((gameName) => <Button variant="primary" onClick={this.loadGame}>{gameName}</Button>);
+			subMenu = (this.props.gameList.map((item) => <Button variant="primary" onClick={this.props.handleGame(item.textToWrite)} key={item.id}>{item.gameName}</Button>));
 		}
 
-		if (this.props.showRanking === true) {
-			//TODO change, request is being sent over and over
+		else if (this.props.isLogged === true && this.props.launchGame === false && this.props.showRanking === true) {
 			const backend_url = 'https://localhost:44306/Results';
 			axios.get(backend_url).
 				then(response => {
@@ -115,7 +115,7 @@ class SubMenu extends React.Component {
 			subMenu = <MainMenu></MainMenu>
 		}
 		return (
-			<div>
+			<div className="user-menu-container">
 				{subMenu}
 			</div>
 		);

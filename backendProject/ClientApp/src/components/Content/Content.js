@@ -23,7 +23,7 @@ class Content extends React.Component{
 		this.handleFetchGames = this.handleFetchGames.bind(this);
 		this.handleRanking = this.handleRanking.bind(this);
 		this.handleLaunch = this.handleLaunch.bind(this);
-		this.loadGame = this.loadGame.bind(this);
+		this.handleGame = this.handleGame.bind(this);
 	}
 
 	componentDidMount() {
@@ -48,12 +48,8 @@ class Content extends React.Component{
 			}
 		}).
 			then(response => {
-				console.log(response.status)
-				this.setState({
-					isLogged: response.status
-				})
+				(response.status == 200) ? this.setState({ isLogged: true }) : this.setState({ isLogged: false})
 			})
-
 	}
 
 
@@ -73,38 +69,37 @@ class Content extends React.Component{
 
 	handleFetchGames(event) {
 		event.preventDefault();
-		this.setState({ gameMenu: true });
+		this.setState({ gameMenu: true }, () => { console.log(this.state.gameMenu) });
 		const backend_url = 'https://localhost:44306/Games'
 		axios.get(backend_url).
 			then(response => {
-				console.log(response + ", " + this.state.gameMenu);
+				console.log(response);
+				console.log(response.data);
 				this.setState({
 					gameList: response.data
 				})
-			})
+			});
     }
 
 	handleRanking(event) {
 		event.preventDefault();
-		console.log("ranking handler");
 	}
 
 	handleLaunch(event) {
 		event.preventDefault();
-		console.log("launcher");
     }
 	
-	loadGame() {
-		console.log("Game!");
-		this.setState({game_tmp : true});
-	}
+	handleGame(event, textToWrite) {
+		event.preventDefault();
+		console.log(textToWrite);
+    }
 
 
 	render() {
 		return (
-			<div className = "container" >
+			<div className="row-container">
 				<UserMenu isLogged={this.state.isLogged} handleFetchGames={this.handleFetchGames} handleRanking={this.handleRanking} />
-				<SubMenu isLogged={this.state.isLogged} username={this.state.username} gameList={this.state.gameList} gameMenu={this.state.gameMenu} handleLogin={this.handleLogin} handleRegister={this.handleRegister} handleChange = { this.handleChange } />
+				<SubMenu isLogged={this.state.isLogged} username={this.state.username} gameList={this.state.gameList} gameMenu={this.state.gameMenu} handleLogin={this.handleLogin} handleRegister={this.handleRegister} handleChange={this.handleChange} handleGame={this.handleGame} />
 			</div>			
 		);
 	}
