@@ -60,9 +60,10 @@ class SubMenu extends React.Component {
 			console.log("check games: " + this.props.gameList);
 			subMenu = (this.props.gameList.map((item) => <Button variant="primary" onClick={() => this.handleGame(item)} key={item.id}>{item.gameName}</Button>));
 		}
-			//to do move handle game to submenu and operate on this states, content does not need to know all that stuff
-		//change gameLaunch prop
+
 		else if (this.props.isLogged === true && Object.keys(this.state.game).length != 0) {
+			//Fix object object
+			console.log("check game " + this.state.game.textToWrite);
 			subMenu = (
 				<MainMenu></MainMenu>);
         }

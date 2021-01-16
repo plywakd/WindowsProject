@@ -24,7 +24,6 @@ class Content extends React.Component{
 		this.handleFetchGames = this.handleFetchGames.bind(this);
 		this.handleRanking = this.handleRanking.bind(this);
 		this.handleLaunch = this.handleLaunch.bind(this);
-		this.handleGame = this.handleGame.bind(this);
 	}
 
 	componentDidMount() {
@@ -92,11 +91,6 @@ class Content extends React.Component{
 		event.preventDefault();
     }
 	
-	handleGame = (xd) => {
-		console.log("hello, " + xd);
-		//this.setState({ gameLauch: true });
-    }
-
 
 	render() {
 		return (
