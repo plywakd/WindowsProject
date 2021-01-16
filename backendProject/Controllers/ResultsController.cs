@@ -23,7 +23,7 @@ namespace backendProject.Controllers
 
         public ActionResult<IEnumerable<Result>> Index()
         {
-            return _context.Results.ToList();
+            return _context.Results.Include(res => res.game).Include(res => res.account).ToList();
         }
 
         [HttpPost("/[controller]/add")]
