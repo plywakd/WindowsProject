@@ -30,8 +30,8 @@ class MainMenu extends React.Component {
         axios.post(backend_url, {
             username: this.props.username,
             gameID: this.props.gameId,
-            wordSpeed: ((this.state.spaceCounter / this.state.ms) * 60000).toFixed(2),
-            mistakes: this.state.mistakes,
+            wordSpeed: Math.round(((this.state.spaceCounter / this.state.ms) * 60000) * 100) / 100,
+            mistakes: this.state.mistakes
         }).
             then(response => {
                 console.log("Result send? " +response.status)
@@ -65,7 +65,6 @@ class MainMenu extends React.Component {
                 }));
             }
             if (this.state.whiteText.length == 0) {
-                this.handleSubmitResult();
                 this.setState(state => ({
                     ms: this.state.ms + ((window.performance && window.performance.now && window.performance.timing && window.performance.timing.navigationStart ? window.performance.now() + window.performance.timing.navigationStart : Date.now()) - this.state.time),
                     time: window.performance && window.performance.now && window.performance.timing && window.performance.timing.navigationStart ? window.performance.now() + window.performance.timing.navigationStart : Date.now(),
@@ -80,7 +79,7 @@ class MainMenu extends React.Component {
 
                 var count = (this.state.greenText.match(/ /g) || []).length + 1;
                 var wordsPerMin = (count / this.state.ms) * 60000;
-                //console.log("Words per minute: " + wordsPerMin);
+                this.handleSubmitResult();
             }
         }
         
