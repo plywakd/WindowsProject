@@ -8,7 +8,7 @@ namespace backendProject.Models
 {
         public static class DbInitializer
         {
-        public static void Initialize(Context context)
+        public static void Initialize(CustomContext context)
         {
             //context.Database.EnsureCreated();
 

@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace backendProject.Controllers
@@ -12,30 +14,59 @@ namespace backendProject.Controllers
     [Route("[controller]")]
     public class GamesController : ControllerBase
     {
-        private readonly Context _context;
+        private readonly CustomContext _context;
 
-        public GamesController(Context context)
+        public GamesController(CustomContext context)
         {
             _context = context;
         }
 
         public ActionResult<IEnumerable<Game>> Index()
         {
-            return _context.Games.Include(game => game.textToWrite).ToList();
+            try
+            {
+                return _context.Games.Include(game => game.textToWrite).ToList();
+            }catch
+            {
+                //return new List<Game>();
+                return StatusCode(404);
+            }
         }
 
+        /*        [HttpPost("/[controller]/add")]
+                [Models.Context.ReadableBodyStream]
+                public ActionResult Add(string gameName, int textID, Difficulty diff)
+                {
+                    try
+                    {
+                        WritingText textToAdd = _context.WritingTexts.Find(textID);
+                        if (textToAdd == null) throw new Exception();
+                        Game game = new Game(gameName, textToAdd, (Difficulty)diff);
+                        game.wordCount = textToAdd.wordCount;
+                        _context.Games.Add(game);
+                        _context.SaveChanges();
+                        return StatusCode(200);
+                    } catch { return StatusCode(404); }
+                }*/
+
         [HttpPost("/[controller]/add")]
-        public ActionResult Add(string gameName, int textID, Difficulty diff)
+        public async Task<ActionResult> AddAsync()
         {
             try
             {
-                WritingText textToAdd = _context.WritingTexts.Find(textID);
-                Game game = new Game(gameName, textToAdd, (Difficulty)diff);
-                game.wordCount = textToAdd.wordCount;
-                _context.Games.Add(game);
-                _context.SaveChanges();
-                return StatusCode(200);
-            } catch { return StatusCode(404); }
+                using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
+                {
+                    string body = await stream.ReadToEndAsync();
+                    GameJSON gameJSON = JsonSerializer.Deserialize<GameJSON>(body);
+                    Game game = gameJSON.getGame(_context.WritingTexts.Find(gameJSON.textToWrite));
+                    _context.Games.Add(game);
+                    _context.SaveChanges();
+                    return StatusCode(200);
+                }
+            } catch
+            {
+                return StatusCode(404);
+            }
         }
 
         [HttpGet("/[controller]/find")]
@@ -57,17 +88,27 @@ namespace backendProject.Controllers
         }
 
         [HttpPut("/[controller]/update")]
-        public ActionResult Update(int id, string name, int textID, int diff)
+        public async Task<ActionResult> UpdateAsync(int id)
         {
             try
             {
-                Game game = _context.Games.Find(id);
-                game.gameName = name;
-                game.textToWrite = _context.WritingTexts.Find(textID);
-                game.difficulty = (Difficulty)diff;
-                _context.Games.Update(game);
-                _context.SaveChanges();
-                return StatusCode(200);
+                using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
+                {
+                    string body = await stream.ReadToEndAsync();
+                    GameJSON gameJSON = JsonSerializer.Deserialize<GameJSON>(body);
+                    Game game = gameJSON.getGame(_context.WritingTexts.Find(gameJSON.textToWrite));
+                    Game newGame = _context.Games.Find(id);
+                    if (game.gameName != "") newGame.gameName = game.gameName;
+                    if (game.difficulty != newGame.difficulty)
+                    {
+                        newGame.difficulty = game.difficulty;
+                        newGame.difficultySetting(newGame.difficulty);
+                    }
+                    if (game.textToWrite != newGame.textToWrite) newGame.textToWrite = game.textToWrite;
+                    _context.Games.Update(newGame);
+                    _context.SaveChanges();
+                    return StatusCode(200);
+                }
             }
             catch { return StatusCode(404); }
         }

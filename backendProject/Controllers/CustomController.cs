@@ -29,9 +29,9 @@ namespace backendProject.Controllers
         }
 
         private readonly ILogger<CustomController> _logger;
-        private readonly Context context;
+        private readonly CustomContext context;
 
-        public CustomController(ILogger<CustomController> logger, Context context)
+        public CustomController(ILogger<CustomController> logger, CustomContext context)
         {
             this.context = context;
             _logger = logger;

@@ -9,7 +9,7 @@ using backendProject.Models;
 
 namespace backendProject.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(CustomContext))]
     [Migration("20210115220854_xd")]
     partial class xd
     {

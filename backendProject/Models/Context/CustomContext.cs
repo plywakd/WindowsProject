@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace backendProject.Models
 {
-    public class Context : DbContext
+    public class CustomContext : DbContext
     {
-        public Context(DbContextOptions<Context> options) : base(options) { }
+        public CustomContext(DbContextOptions<CustomContext> options) : base(options) { }
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Game> Games { get; set; }

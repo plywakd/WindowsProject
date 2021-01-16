@@ -22,7 +22,7 @@ namespace backendProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<Context>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<CustomContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllersWithViews();
 
 
@@ -52,6 +52,8 @@ namespace backendProject
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

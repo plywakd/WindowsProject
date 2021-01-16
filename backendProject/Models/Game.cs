@@ -55,6 +55,18 @@ namespace backendProject.Models
         }
     }
 
+    public class GameJSON
+    {
+        public string gameName { set; get; }
+        public int textToWrite { set; get; }
+        public int difficulty { set; get; }
+        
+        public Game getGame( WritingText wt )
+        {
+            return new Game(gameName, wt, (Difficulty)difficulty);
+        }
+    }
+
     public enum Difficulty
     {
         EASY,

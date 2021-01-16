@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace backendProject.Controllers
@@ -12,9 +14,9 @@ namespace backendProject.Controllers
     [Route("[controller]")]
     public class ResultsController : ControllerBase
     {
-        private readonly Context _context;
+        private readonly CustomContext _context;
 
-        public ResultsController(Context context)
+        public ResultsController(CustomContext context)
         {
             _context = context;
         }
@@ -24,46 +26,62 @@ namespace backendProject.Controllers
             return _context.Results.ToList();
         }
 
-        [HttpPost("/[controller]/add/{gameID}/{ws}/{accID}/{m}")]
-        public ActionResult Add(int gameID, double ws, int accID, int m)
+        [HttpPost("/[controller]/add")]
+        public async Task<ActionResult> AddAsync()
         {
             try
             {
-                Result result = new Result(_context.Games.Find(gameID), ws, _context.Accounts.Find(accID), DateTime.Now  , m);
-                _context.Results.Add(result);
-                _context.SaveChanges();
-                return StatusCode(200);
-            }catch
+                using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
+                {
+                    string body = await stream.ReadToEndAsync();
+                    ResultJSON resultJSON = JsonSerializer.Deserialize<ResultJSON>(body);
+                    Result result = resultJSON.getResult(_context.Games.Find(resultJSON.gameID), _context.Accounts.Find(resultJSON.accountID));
+                    _context.Results.Add(result);
+                    _context.SaveChanges();
+                    return StatusCode(200);
+                }
+            }
+            catch
             {
                 return StatusCode(404);
             }
         }
 
-        [HttpGet("/[controller]/find/{id}")]
+        [HttpGet("/[controller]/find")]
         public ActionResult<Result> Find(int id)
         {
                 return _context.Results.Find(id);
         }
 
-        [HttpGet("/[controller]/player/{accId}")]
+        [HttpGet("/[controller]/player")]
         public ActionResult<IEnumerable<Result>> ForAccount(int accId)
         {
-            return findByAccount(accId).ToList();
+            try { return findByAccount(accId).ToList(); }
+            catch { return StatusCode(404); }
         }
 
-        [HttpGet("/[controller]/player/{accId}/{passed}")]
-        public ActionResult<IEnumerable<Result>> ForAccountPassed(int accId, bool passed)
+        [HttpGet("/[controller]/player/criteria")]
+        public async Task<ActionResult<IEnumerable<Result>>> ForAccountAsync()
         {
-            return findByAccount(accId).Where(r => r.isPassed == passed).ToList();
+            //try{
+                using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
+                {
+                    string body = await stream.ReadToEndAsync();
+                if (body == "") return StatusCode(407);
+                    ResultSearchJSON resultJSON = JsonSerializer.Deserialize<ResultSearchJSON>(body);
+                    IEnumerable<Result> results = findByAccount(resultJSON.accountID).Where(r => r.isPassed == resultJSON.isPassed);
+                    if (resultJSON.startDate != null) results = results.Where(r => r.finish_date >= resultJSON.startDate);
+                    if (resultJSON.endDate != null) results = results.Where(r => r.finish_date <= resultJSON.endDate);
+                    return results.ToList();
+                }
+/*            }
+            catch
+            {
+                return StatusCode(404);
+            }*/
         }
 
-        [HttpGet("/[controller]/player/{accId}/{date1}/{date2}")]
-        public ActionResult<IEnumerable<Result>> ForAccountBetweenDates(int accId, DateTime date1, DateTime date2)
-        {
-            return findByAccount(accId).Where(r => r.finish_date >= date1 && r.finish_date <= date2).ToList();
-        }
-
-        [HttpDelete("/[controller]/delete/{id}")]
+        [HttpDelete("/[controller]/delete")]
         public ActionResult Delete(int id)
         {
             try
