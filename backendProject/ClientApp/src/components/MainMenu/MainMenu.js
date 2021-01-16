@@ -1,5 +1,6 @@
 import React from 'react';
 import './mainmenu.css';
+import axios from 'axios';
 
 class MainMenu extends React.Component {
     constructor(props) {
@@ -11,10 +12,32 @@ class MainMenu extends React.Component {
             wpm: "0" + this.wpmString,
             spaceCounter: 0,
             time: window.performance && window.performance.now && window.performance.timing && window.performance.timing.navigationStart ? window.performance.now() + window.performance.timing.navigationStart : Date.now(),
-            ms: 0
+            ms: 0,
+            mistakes : 0,
         };
         this.keyAction = this.keyAction.bind(this);
         document.addEventListener('keydown', this.keyAction, false);
+    }
+
+    componentDidMount() {
+        console.log("GAME component");
+        this.setState({ whiteText: this.props.mainText })
+    }
+
+    handleSubmitResult = () => {
+        console.log("check params " + this.props.username + "," + this.props.gameId + "," + this.state.mistakes);
+        const backend_url = 'https://localhost:44306/Results/add';
+        axios.post(backend_url, {}, {
+            params: {
+                username: this.props.username,
+                gameID: this.props.gameId,
+                wordSpeed: ((this.state.spaceCounter / this.state.ms) * 60000).toFixed(2),
+                mistakes: this.state.mistakes,
+            }
+        }).
+            then(response => {
+                console.log("Result send? " +response.status)
+            });
     }
 
     keyAction(e) {
@@ -44,6 +67,7 @@ class MainMenu extends React.Component {
                 }));
             }
             if (this.state.whiteText.length == 0) {
+                this.handleSubmitResult();
                 this.setState(state => ({
                     ms: this.state.ms + ((window.performance && window.performance.now && window.performance.timing && window.performance.timing.navigationStart ? window.performance.now() + window.performance.timing.navigationStart : Date.now()) - this.state.time),
                     time: window.performance && window.performance.now && window.performance.timing && window.performance.timing.navigationStart ? window.performance.now() + window.performance.timing.navigationStart : Date.now(),

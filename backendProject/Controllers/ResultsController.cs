@@ -24,12 +24,15 @@ namespace backendProject.Controllers
             return _context.Results.ToList();
         }
 
-        [HttpPost("/[controller]/add/{gameID}/{ws}/{accID}/{m}")]
-        public ActionResult Add(int gameID, double ws, int accID, int m)
+        [HttpPost("/[controller]/add")]
+        public ActionResult Add(int gameID, double wordSpeed, string username, int mistakes)
         {
             try
             {
-                Result result = new Result(_context.Games.Find(gameID), ws, _context.Accounts.Find(accID), DateTime.Now  , m);
+                Console.WriteLine(gameID + "," + wordSpeed + "," + username + "," + mistakes);
+                Account acc = _context.Accounts.SingleOrDefault(account => account.Username == username);
+                Console.WriteLine("Check if found "+acc);
+                Result result = new Result(_context.Games.Find(gameID), wordSpeed, acc, DateTime.Now  , mistakes);
                 _context.Results.Add(result);
                 _context.SaveChanges();
                 return StatusCode(200);

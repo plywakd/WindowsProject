@@ -36,7 +36,7 @@ class Content extends React.Component{
 		const name = target.name;
 		this.setState({
 		  [name]: value    
-		},() => console.log(value+","+name));
+		});
 	}
 	
 	handleLogin(event){
@@ -73,7 +73,6 @@ class Content extends React.Component{
 		const backend_url = 'https://localhost:44306/Games'
 		axios.get(backend_url).
 			then(response => {
-				console.log(response);
 				console.log(response.data);
 				this.setState({
 					gameList: response.data

@@ -12,7 +12,7 @@ class SubMenu extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			game: {},
+			game: Object,
 		}
 		this.handleGame = this.handleGame.bind(this);
 	}
@@ -22,9 +22,8 @@ class SubMenu extends React.Component {
 	}
 
 	handleGame = (xd) => {
-		this.setState({ game: xd }, () => {
-			console.log("hello, " + xd + "," + Object.keys(this.state.game).length);
-		});
+		console.log(xd);
+		this.setState({ game: xd });
 	}
 
 	render() {
@@ -51,22 +50,20 @@ class SubMenu extends React.Component {
 					</Button>
 				</Form>);
 		}
-		else if (this.props.isLogged === true && this.props.gameMenu===false){
+		else if (this.props.isLogged === true && this.props.gameMenu === false) {
 			subMenu = (
 				<h2> Welcome {this.props.username} </h2>)
 		}
 
 		else if (this.props.isLogged === true && this.props.gameMenu === true && Object.keys(this.state.game).length == 0) {
-			console.log("check games: " + this.props.gameList);
 			subMenu = (this.props.gameList.map((item) => <Button variant="primary" onClick={() => this.handleGame(item)} key={item.id}>{item.gameName}</Button>));
 		}
 
 		else if (this.props.isLogged === true && Object.keys(this.state.game).length != 0) {
-			//Fix object object
-			console.log("check game " + this.state.game.textToWrite);
+			console.log(this.state.game);
 			subMenu = (
-				<MainMenu></MainMenu>);
-        }
+				<MainMenu mainText={this.state.game.textToWrite.text} username={this.props.username} gameId={this.state.game.id}></ MainMenu>);
+		}
 
 		else if (this.props.isLogged === true && this.props.launchGame === false && this.props.showRanking === true) {
 			const backend_url = 'https://localhost:44306/Results';
