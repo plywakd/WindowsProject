@@ -27,7 +27,7 @@ namespace backendProject
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var context = services.GetRequiredService<Context>();
+                    var context = services.GetRequiredService<CustomContext>();
                     DbInitializer.Initialize(context);
                 }
                 catch (Exception ex)

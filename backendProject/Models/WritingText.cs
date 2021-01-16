@@ -24,8 +24,8 @@ namespace backendProject.Models
             text = t;
             source = s;
             wordCount = countWords();
-            topSpeed = 0;
-            averageSpeed = 0;
+            topSpeed = 0.0d;
+            averageSpeed = 0.0d;
         }
 
         public int countWords()
@@ -33,5 +33,16 @@ namespace backendProject.Models
             return text.Count(c => c == ' ') + 1;
         }
 
+    }
+
+    public class WritingTextJSON
+    {
+        public string text { get; set; }
+        public string source { get; set; }
+
+        public WritingText getWritingText()
+        {
+            return new WritingText(text, source);
+        }
     }
 }

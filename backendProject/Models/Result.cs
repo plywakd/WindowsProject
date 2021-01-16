@@ -30,4 +30,26 @@ namespace backendProject.Models
             isPassed = ws >= game.minWordspeed && mistakes <= game.maxMistakes;
         }
     }
+
+    public class ResultJSON
+    {
+        public int gameID { get; set; }
+        public double wordSpeed { get; set; }
+        public int accountID { get; set; }
+        public int mistakes { get; set; }
+
+        public Result getResult(Game game, Account account)
+        {
+            return new Result(game, wordSpeed, account, DateTime.Now, mistakes);
+        }
+    }
+
+    public class ResultSearchJSON
+    {
+        public int accountID { get; set; }
+        public bool isPassed { get; set; }
+        public DateTime startDate { get; set; }
+        public DateTime endDate { get; set; }
+
+    }
 }

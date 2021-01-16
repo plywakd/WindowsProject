@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace backendProject.Controllers
 {
@@ -10,34 +13,41 @@ namespace backendProject.Controllers
     [Route("[controller]")]
     public class WritingTextsController : ControllerBase
     {
-        private readonly Context _context;
+        private readonly CustomContext _context;
 
-        public WritingTextsController(Context context)
+        public WritingTextsController(CustomContext context)
         {
             _context = context;
         }
 
-        public List<WritingText> Index()
+        public ActionResult<IEnumerable<WritingText>> Index()
         {
             return _context.WritingTexts.ToList();
         }
 
         [HttpPost("/[controller]/add")]
-        public ActionResult Add(string text, string source)
+        public async Task<ActionResult> AddAsync()
         {
             try
             {
-                WritingText wt = new WritingText(text, source);
-                _context.WritingTexts.Add(wt);
-                _context.SaveChanges();
-                return StatusCode(200);
-            } catch
+
+                using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
+                {
+                    string body = await stream.ReadToEndAsync();
+                    WritingTextJSON writingTextJSON = JsonSerializer.Deserialize<WritingTextJSON>(body);
+                    WritingText writingText = writingTextJSON.getWritingText();
+                    _context.WritingTexts.Add(writingText);
+                    _context.SaveChanges();
+                    return StatusCode(200);
+                }
+            }
+            catch (Exception e)
             {
                 return StatusCode(404);
             }
         }
 
-        [HttpGet("/[controller]/find")]
+            [HttpGet("/[controller]/find")]
         public ActionResult<WritingText> Find(int id)
         {
                 return _context.WritingTexts.Find(id);
@@ -50,6 +60,7 @@ namespace backendProject.Controllers
             try
             {
                 WritingText wt = _context.WritingTexts.Find(id);
+                _context.Games.Where(g => g.textToWrite == wt).ToList().ForEach(g => g.textToWrite = null);
                 _context.WritingTexts.Remove(wt);
                 _context.SaveChanges();
                 return StatusCode(200);
@@ -58,18 +69,29 @@ namespace backendProject.Controllers
         }
 
         [HttpPut("/[controller]/update")]
-        public ActionResult Update(int id, string text, string source)
+        public async System.Threading.Tasks.Task<ActionResult> UpdateAsync(int id)
         {
             try
             {
-                WritingText wt = _context.WritingTexts.Find(id);
-                wt.text = text;
-                wt.source = source;
-                _context.WritingTexts.Update(wt);
-                _context.SaveChanges();
-                return StatusCode(200);
+                using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
+                {
+                    string body = await stream.ReadToEndAsync();
+                    WritingTextJSON writingTextJSON = JsonSerializer.Deserialize<WritingTextJSON>(body);
+                    WritingText writingText = writingTextJSON.getWritingText();
+                    WritingText newWritingText = _context.WritingTexts.Find(id);
+                    if (newWritingText != null) { 
+                        if (writingText.text != "") newWritingText.text = writingText.text;
+                        if (writingText.source != "") newWritingText.source = writingText.source;
+                        _context.WritingTexts.Update(newWritingText);
+                        _context.SaveChanges();
+                        return StatusCode(200);
+                    } else return StatusCode(404);
+                }
             }
-            catch { return StatusCode(404); }
+            catch (Exception e)
+            {
+                return StatusCode(404);
+            }
         }
 
         [HttpPut("/[controller]/updateSpeeds")]
@@ -90,13 +112,16 @@ namespace backendProject.Controllers
         private double getAvgSpeed(int textID)
         {
             double sumSpeed = _context.Results.ToList().Aggregate(0.0d, (acc, x) => acc + x.wordSpeed);
-            double resultSpeed = sumSpeed / _context.Results.ToList().Count();
+            double resultSpeed;
+            if (sumSpeed != 0) resultSpeed = sumSpeed / _context.Results.ToList().Count();
+            else return 0;
             return resultSpeed;
         }
 
         private double getTopSpeed(int textID)
         {
-            return _context.Results.ToList().Max(r => r.wordSpeed);
+            try { return _context.Results.ToList().Max(r => r.wordSpeed); }
+            catch { return 0; }
         }
 
 

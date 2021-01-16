@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace backendProject.Controllers
@@ -12,9 +14,9 @@ namespace backendProject.Controllers
     [Route("[controller]")]
     public class AccountsController : ControllerBase
     {
-        private readonly Context _context;
+        private readonly CustomContext _context;
 
-        public AccountsController(Context context)
+        public AccountsController(CustomContext context)
         {
             _context = context;
         }
@@ -30,35 +32,40 @@ namespace backendProject.Controllers
             return _context.Accounts.Find(id);
         }
 
-        [HttpGet("/[controller]/login")]
-        public ActionResult LogInUser(string username)
+        [HttpPost("/[controller]/login")]
+        public async Task<ActionResult> LogInUserAsync()
         {
             try
             {
-                // TODO implement parsing parameters from json body request
-                Account acc = _context.Accounts.Where(s => s.Username.Equals(username)).FirstOrDefault();
-                if (acc != null)
+                using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
                 {
-                    return StatusCode(200);
+                    string body = await stream.ReadToEndAsync();
+                    AccountJSON accJSON = JsonSerializer.Deserialize<AccountJSON>(body);
+                    Account acc = _context.Accounts.Where(s => s.Username.Equals(accJSON.username)).FirstOrDefault();
+                    if (acc != null && acc.Password.Equals(accJSON.password))
+                    {
+                        return StatusCode(200);
+                    }
+                    return StatusCode(404);
                 }
-                return StatusCode(404);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(404);
-            }
+            } catch {return StatusCode(404); }
         }
 
         [HttpPost("/[controller]/add")]
-        public ActionResult Add(string username, string password)
+        public async Task<ActionResult> AddAsync()
         {
             try
             {
-                Account acc = new Account(username, password);
-                _context.Accounts.Add(acc);
-                _context.SaveChanges();
-                //return String.Format("User - {0} - added", acc.Username);
-                return StatusCode(201);
+
+                using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
+                {
+                    string body = await stream.ReadToEndAsync();
+                    AccountJSON accJSON = JsonSerializer.Deserialize<AccountJSON>(body);
+                    Account acc = accJSON.getAccount();
+                    _context.Accounts.Add(acc);
+                    _context.SaveChanges();
+                    return StatusCode(200);
+               }
             }
             catch (Exception e)
             {
@@ -83,18 +90,28 @@ namespace backendProject.Controllers
         }
 
         [HttpPut("/[controller]/update")]
-        public ActionResult Update(int id, string username, string password)
+        public async Task<ActionResult> UpdateAsync(int id)
         {
             try
             {
-                Account acc = _context.Accounts.Find(id);
-                acc.Username = username;
-                acc.Password = password;
-                _context.Accounts.Update(acc);
-                _context.SaveChanges();
-                return StatusCode(200);
+
+                using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
+                {
+                    string body = await stream.ReadToEndAsync();
+                    AccountJSON accJSON = JsonSerializer.Deserialize<AccountJSON>(body);
+                    Account acc = accJSON.getAccount();
+                    Account newAcc = _context.Accounts.Find(id);
+                    if (acc.Username != "") newAcc.Username = acc.Username;
+                    if (acc.Password != "") newAcc.Password = acc.Password;
+                    _context.Accounts.Update(newAcc);
+                    _context.SaveChanges();
+                    return StatusCode(200);
+                }
             }
-            catch { return StatusCode(404); }
+            catch (Exception e)
+            {
+                return StatusCode(404);
+            }
         }
 
 
