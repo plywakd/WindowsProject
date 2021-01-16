@@ -36,7 +36,7 @@ class Content extends React.Component{
 		const name = target.name;
 		this.setState({
 		  [name]: value    
-		});
+		},() => console.log(value+","+name));
 	}
 	
 	handleLogin(event){
@@ -56,7 +56,7 @@ class Content extends React.Component{
 	handleRegister(event) {
 		event.preventDefault();
 		const backend_url = 'https://localhost:44306/Accounts/add'
-		axios.post(backend_url, {
+		axios.post(backend_url, {}, {
 			params: {
 				username: this.state.username,
 				password: this.state.password,
