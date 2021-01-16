@@ -86,10 +86,9 @@ class Content extends React.Component{
 		const backend_url = 'https://localhost:44306/Results';
 		axios.get(backend_url).
 			then(response => {
-				console.log(response.status)
-				console.log(response.data)
-				this.setState({ results: response.data })
-			})
+				console.log(response.data);
+				this.setState({ results: response.data }, () => { console.log(this.state.results) });
+			});
 	}
 
 	handleLaunch(event) {

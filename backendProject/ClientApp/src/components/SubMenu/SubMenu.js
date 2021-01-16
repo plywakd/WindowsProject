@@ -13,8 +13,10 @@ class SubMenu extends React.Component {
 		super(props);
 		this.state = {
 			game: Object,
+			resultHeader: Object,
 		}
 		this.handleGame = this.handleGame.bind(this);
+		this.handleParam = this.handleParam.bind(this);
 	}
 
 	componentDidMount() {
@@ -22,13 +24,27 @@ class SubMenu extends React.Component {
 	}
 
 	handleGame = (xd) => {
-		console.log(xd);
 		this.setState({ game: xd });
 	}
 
+	handleParam = (toRecognize) => {
+		if (typeof (toRecognize) === 'string') {
+			let date = new Date(toRecognize);
+			return date.toString()
+		}
+		else if (typeof (toRecognize) === 'object') {
+			if (Object.keys(toRecognize).includes("username")) {
+				return toRecognize.username
+			}
+			else if (Object.keys(toRecognize).includes("gameName")) {
+				return toRecognize.gameName
+            }
+        }
+		return ""
+    }
+
 	render() {
 		let subMenu;
-		console.log(this.props);
 		if (this.props.isLogged === false) {
 			subMenu =
 				(<Form>
@@ -60,60 +76,40 @@ class SubMenu extends React.Component {
 		}
 
 		else if (this.props.isLogged === true && Object.keys(this.state.game).length != 0 && this.props.showRanking === false) {
-			console.log(this.state.game);
 			subMenu = (
 				<MainMenu mainText={this.state.game.textToWrite.text} username={this.props.username} gameId={this.state.game.id}></ MainMenu>);
 		}
 
 		else if (this.props.isLogged === true && this.props.showRanking === true) {
-			console.log(this.props.results);
-			console.log(this.props.results[0]);
-			subMenu = <Table responsive>
-				<thead>
-					<tr>
-						<th>#</th>
-						{Array.from({ length: 12 }).map((_, index) => (
-							<th key={index}>Table heading</th>
-						))}
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>1</td>
-						{Array.from({ length: 12 }).map((_, index) => (
-							<td key={index}>Table cell {index}</td>
-						))}
-					</tr>
-					<tr>
-						<td>2</td>
-						{Array.from({ length: 12 }).map((_, index) => (
-							<td key={index}>Table cell {index}</td>
-						))}
-					</tr>
-					<tr>
-						<td>3</td>
-						{Array.from({ length: 12 }).map((_, index) => (
-							<td key={index}>Table cell {index}</td>
-						))}
-					</tr>
-				</tbody>
-			</Table>
-			const res = this.props.results;
-			let elements = []
-			//TODO create ranking based on results fields
-			let rank = <Table responsive>
-				<thead>
-					<tr>
-						<th>#</th>
-						{Array.from({ length: 12 }).map((_, index) => (
-							<th key={index}>Table heading</th>
-						))}
-					</tr>
-				</thead>
-				<tbody>
-					{elements}
-				</tbody>
-			</Table>
+			let headers;
+			let header;
+			let res;
+			if (Object.keys(this.props.results) != 0) {
+				res = this.props.results;
+				headers = Object.values(res)[0];
+				if (headers) {
+					header = Object.keys(headers);
+					if (header) {
+						subMenu = <Table responsive>
+							<thead>
+								<tr>
+									{header.map((k, i) => <th key={i}>{k}</th>)}
+								</tr>
+							</thead>
+							<tbody>
+								{
+									res.map((r,i) => (
+										<tr key={i}>{
+											Object.values(r).map((resval, j) => <td key={j}>{(Object.keys(resval).length !=0) ? this.handleParam(resval) : resval.toString()}</td>)
+                                        }
+										</tr>
+									))
+                                }
+							</tbody>
+						</Table>
+                    }
+                }
+            }
 		}
 
 		if (this.state.game_tmp === true) {
