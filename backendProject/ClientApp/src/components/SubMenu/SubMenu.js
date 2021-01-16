@@ -50,30 +50,24 @@ class SubMenu extends React.Component {
 					</Button>
 				</Form>);
 		}
-		else if (this.props.isLogged === true && this.props.gameMenu === false) {
+		else if (this.props.isLogged === true && this.props.gameMenu === false && this.props.showRanking === false ) {
 			subMenu = (
 				<h2> Welcome {this.props.username} </h2>)
 		}
 
-		else if (this.props.isLogged === true && this.props.gameMenu === true && Object.keys(this.state.game).length == 0) {
+		else if (this.props.isLogged === true && this.props.gameMenu === true && Object.keys(this.state.game).length == 0 && this.props.showRanking === false) {
 			subMenu = (this.props.gameList.map((item) => <Button variant="primary" onClick={() => this.handleGame(item)} key={item.id}>{item.gameName}</Button>));
 		}
 
-		else if (this.props.isLogged === true && Object.keys(this.state.game).length != 0) {
+		else if (this.props.isLogged === true && Object.keys(this.state.game).length != 0 && this.props.showRanking === false) {
 			console.log(this.state.game);
 			subMenu = (
 				<MainMenu mainText={this.state.game.textToWrite.text} username={this.props.username} gameId={this.state.game.id}></ MainMenu>);
 		}
 
-		else if (this.props.isLogged === true && this.props.launchGame === false && this.props.showRanking === true) {
-			const backend_url = 'https://localhost:44306/Results';
-			axios.get(backend_url).
-				then(response => {
-					console.log(response.status)
-					console.log(response.data)
-					this.setState({ results: response.data })
-				})
-
+		else if (this.props.isLogged === true && this.props.showRanking === true) {
+			console.log(this.props.results);
+			console.log(this.props.results[0]);
 			subMenu = <Table responsive>
 				<thead>
 					<tr>
@@ -104,7 +98,7 @@ class SubMenu extends React.Component {
 					</tr>
 				</tbody>
 			</Table>
-			const res = this.state.results;
+			const res = this.props.results;
 			let elements = []
 			//TODO create ranking based on results fields
 			let rank = <Table responsive>

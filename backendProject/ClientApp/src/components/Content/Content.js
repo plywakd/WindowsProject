@@ -16,6 +16,7 @@ class Content extends React.Component{
 			gameList : [],
 			gameMenu: false,
 			gameLauch: false,
+			showRanking: false,
 			results : [],
 		}
 		this.handleChange = this.handleChange.bind(this);
@@ -81,6 +82,14 @@ class Content extends React.Component{
 
 	handleRanking(event) {
 		event.preventDefault();
+		this.setState({ showRanking: true }, () => { console.log(this.state.showRanking) });
+		const backend_url = 'https://localhost:44306/Results';
+		axios.get(backend_url).
+			then(response => {
+				console.log(response.status)
+				console.log(response.data)
+				this.setState({ results: response.data })
+			})
 	}
 
 	handleLaunch(event) {
@@ -92,7 +101,7 @@ class Content extends React.Component{
 		return (
 			<div className="row-container">
 				<UserMenu isLogged={this.state.isLogged} handleFetchGames={this.handleFetchGames} handleRanking={this.handleRanking} />
-				<SubMenu isLogged={this.state.isLogged} username={this.state.username} gameList={this.state.gameList} gameMenu={this.state.gameMenu} gameLauch={this.state.gameLauch} handleLogin={this.handleLogin} handleRegister={this.handleRegister} handleChange={this.handleChange} handleGame={this.handleGame} />
+				<SubMenu isLogged={this.state.isLogged} username={this.state.username} gameList={this.state.gameList} gameMenu={this.state.gameMenu} gameLauch={this.state.gameLauch} showRanking={this.state.showRanking} results={this.state.results} handleLogin={this.handleLogin} handleRegister={this.handleRegister} handleChange={this.handleChange} handleGame={this.handleGame} />
 			</div>			
 		);
 	}
