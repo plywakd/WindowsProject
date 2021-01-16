@@ -27,13 +27,11 @@ class MainMenu extends React.Component {
     handleSubmitResult = () => {
         console.log("check params " + this.props.username + "," + this.props.gameId + "," + this.state.mistakes);
         const backend_url = 'https://localhost:44306/Results/add';
-        axios.post(backend_url, {}, {
-            params: {
-                username: this.props.username,
-                gameID: this.props.gameId,
-                wordSpeed: ((this.state.spaceCounter / this.state.ms) * 60000).toFixed(2),
-                mistakes: this.state.mistakes,
-            }
+        axios.post(backend_url, {
+            username: this.props.username,
+            gameID: this.props.gameId,
+            wordSpeed: ((this.state.spaceCounter / this.state.ms) * 60000).toFixed(2),
+            mistakes: this.state.mistakes,
         }).
             then(response => {
                 console.log("Result send? " +response.status)

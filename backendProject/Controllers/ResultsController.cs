@@ -35,16 +35,16 @@ namespace backendProject.Controllers
                 {
                     string body = await stream.ReadToEndAsync();
                     ResultJSON resultJSON = JsonSerializer.Deserialize<ResultJSON>(body);
-                    Result result = resultJSON.getResult(_context.Games.Find(resultJSON.gameID), _context.Accounts.Find(resultJSON.accountID));
+                    Console.WriteLine("Check body json: " + resultJSON.gameID+","+resultJSON.wordSpeed+","+resultJSON.mistakes+","+resultJSON.username);
+                    Account acc = _context.Accounts.Where(a => a.Username.Equals(resultJSON.username)).FirstOrDefault();
+                    Result result = resultJSON.getResult(_context.Games.Find(resultJSON.gameID), acc);
                     _context.Results.Add(result);
                     _context.SaveChanges();
+
                     return StatusCode(200);
                 }
             }
-            catch
-            {
-                return StatusCode(404);
-            }
+            catch { return StatusCode(404); }
         }
 
         [HttpGet("/[controller]/find")]

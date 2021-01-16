@@ -34,8 +34,9 @@ namespace backendProject.Models
     public class ResultJSON
     {
         public int gameID { get; set; }
+        public string username { get; set; }
         public double wordSpeed { get; set; }
-        public int accountID { get; set; }
+        //public int accountID { get; set; }
         public int mistakes { get; set; }
 
         public Result getResult(Game game, Account account)

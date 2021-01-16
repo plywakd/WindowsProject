@@ -42,10 +42,9 @@ class Content extends React.Component{
 	handleLogin(event){
 		event.preventDefault();
 		const backend_url = 'https://localhost:44306/Accounts/login'
-		axios.get(backend_url, {
-			params: {
-				username: this.state.username,
-			}
+		axios.post(backend_url, {
+			username: this.state.username,
+			password: this.state.password,
 		}).
 			then(response => {
 				(response.status == 200) ? this.setState({ isLogged: true }) : this.setState({ isLogged: false})
@@ -56,11 +55,9 @@ class Content extends React.Component{
 	handleRegister(event) {
 		event.preventDefault();
 		const backend_url = 'https://localhost:44306/Accounts/add'
-		axios.post(backend_url, {}, {
-			params: {
-				username: this.state.username,
-				password: this.state.password,
-			}
+		axios.post(backend_url, {
+			username: this.state.username,
+			password: this.state.password,
 		})
 			.then(function (response) {
 			console.log(response);
