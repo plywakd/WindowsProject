@@ -72,7 +72,8 @@ namespace backendProject.Controllers
         [HttpGet("/[controller]/find")]
         public ActionResult<Game> Find(int id)
         {
-            return _context.Games.Find(id);
+            Game game = _context.Games.Include(g => g.textToWrite).Where(g=> g.ID==id).FirstOrDefault();
+            return game;
         }
 
         [HttpDelete("/[controller]/delete")]
