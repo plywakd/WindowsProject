@@ -67,7 +67,7 @@ class Content extends React.Component{
 
 	handleFetchGames(event) {
 		event.preventDefault();
-		this.setState({ gameMenu: true }, () => { console.log(this.state.gameMenu) });
+		this.setState({ showRanking: false }, () => this.setState({ gameMenu: true }));
 		const backend_url = 'https://localhost:44306/Games'
 		axios.get(backend_url).
 			then(response => {
@@ -82,7 +82,7 @@ class Content extends React.Component{
 
 	handleRanking(event) {
 		event.preventDefault();
-		this.setState({ showRanking: true }, () => { console.log(this.state.showRanking) });
+		this.setState({ gameMenu: false }, () => this.setState({ showRanking: true }));
 		const backend_url = 'https://localhost:44306/Results';
 		axios.get(backend_url).
 			then(response => {
