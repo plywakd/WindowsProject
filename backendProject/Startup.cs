@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using backendProject.Services;
 
 namespace backendProject
 {
@@ -53,7 +54,6 @@ namespace backendProject
 
             app.UseRouting();
 
-            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -71,6 +71,7 @@ namespace backendProject
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
         }
     }
 }
