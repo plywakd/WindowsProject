@@ -20,6 +20,7 @@ namespace backendProject.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>().ToTable("Account");
+            modelBuilder.Entity<Account>().HasKey("ID");
             modelBuilder.Entity<Game>().Property(g => g.difficulty).HasConversion(d => d.ToString(), d => (Difficulty)Enum.Parse(typeof(Difficulty), d));
             modelBuilder.Entity<Game>().ToTable("Game");
             modelBuilder.Entity<Result>().ToTable("Result");

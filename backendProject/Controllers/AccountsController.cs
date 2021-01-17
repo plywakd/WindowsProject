@@ -114,6 +114,25 @@ namespace backendProject.Controllers
             }
         }
 
+        [HttpPut("/[controller]/lastlogged")]
+        public async Task<ActionResult> LastLogged(int id)
+        {
+            try
+            {
+                Account acc = _context.Accounts.Find(id);
+                acc.Last_logged = DateTime.Now;
+                _context.Accounts.Update(acc);
+                _context.SaveChanges();
+                return StatusCode(200);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(404);
+            }
+        }
+
+
+
 
     }
 }

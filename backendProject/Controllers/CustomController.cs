@@ -43,15 +43,5 @@ namespace backendProject.Controllers
             return callurl(words).ToArray();
         }
 
-        [HttpGet("/[controller]/save/{name}/{password}")]
-        public string Save(int id, string name, string password)
-        {
-            Account acc = new Account(name, password);
-            context.Accounts.Add(acc);
-            context.SaveChanges();
-            return "Account added";
-        }
-
-
     }
 }

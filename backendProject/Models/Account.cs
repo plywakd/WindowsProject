@@ -13,6 +13,7 @@ namespace backendProject.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
+        [Key]
         public string Username { get; set; }
         public string Password { get; set; }
         public DateTime Last_logged { get; set; }

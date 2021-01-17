@@ -111,16 +111,16 @@ namespace backendProject.Controllers
 
         private double getAvgSpeed(int textID)
         {
-            double sumSpeed = _context.Results.ToList().Aggregate(0.0d, (acc, x) => acc + x.wordSpeed);
+            double sumSpeed = _context.Results.Where(r => r.game.textToWrite == _context.WritingTexts.Find(textID)).ToList().Aggregate(0.0d, (acc, x) => acc + x.wordSpeed);
             double resultSpeed;
-            if (sumSpeed != 0) resultSpeed = sumSpeed / _context.Results.ToList().Count();
+            if (sumSpeed != 0) resultSpeed = sumSpeed / _context.Results.Where(r => r.game.textToWrite == _context.WritingTexts.Find(textID)).ToList().Count();
             else return 0;
             return resultSpeed;
         }
 
         private double getTopSpeed(int textID)
         {
-            try { return _context.Results.ToList().Max(r => r.wordSpeed); }
+            try { return _context.Results.Where(r => r.game.textToWrite == _context.WritingTexts.Find(textID)).ToList().Max(r => r.wordSpeed); }
             catch { return 0; }
         }
 

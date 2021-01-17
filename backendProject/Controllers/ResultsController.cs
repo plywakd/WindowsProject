@@ -1,6 +1,8 @@
 ﻿using backendProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,7 +36,7 @@ namespace backendProject.Controllers
                 using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
                 {
                     string body = await stream.ReadToEndAsync();
-                    ResultJSON resultJSON = JsonSerializer.Deserialize<ResultJSON>(body);
+                    ResultJSON resultJSON = System.Text.Json.JsonSerializer.Deserialize<ResultJSON>(body);
                     Console.WriteLine("Check body json: " + resultJSON.gameID+","+resultJSON.wordSpeed+","+resultJSON.mistakes+","+resultJSON.username);
                     Account acc = _context.Accounts.Where(a => a.Username.Equals(resultJSON.username)).FirstOrDefault();
                     Result result = resultJSON.getResult(_context.Games.Find(resultJSON.gameID), acc);
@@ -54,31 +56,31 @@ namespace backendProject.Controllers
         }
 
         [HttpGet("/[controller]/player")]
-        public ActionResult<IEnumerable<Result>> ForAccount(int accId)
+        public ActionResult<IEnumerable<ResultTableJSON>> ForAccount(int accId)
         {
-            try { return findByAccount(accId).ToList(); }
+            try { return findByAccount(accId).Select(r => r.GetResultTableJSON(r.game, r.account)).ToList(); }
             catch { return StatusCode(404); }
         }
 
-        [HttpGet("/[controller]/player/criteria")]
-        public async Task<ActionResult<IEnumerable<Result>>> ForAccountAsync()
+        [HttpPost("/[controller]/player/criteria")]
+        public async Task<ActionResult<IEnumerable<ResultTableJSON>>> ForAccountAsync()
         {
-            //try{
+            try{
                 using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
                 {
                     string body = await stream.ReadToEndAsync();
                 if (body == "") return StatusCode(407);
-                    ResultSearchJSON resultJSON = JsonSerializer.Deserialize<ResultSearchJSON>(body);
-                    IEnumerable<Result> results = findByAccount(resultJSON.accountID).Where(r => r.isPassed == resultJSON.isPassed);
+                ResultSearchJSON resultJSON = JsonConvert.DeserializeObject<ResultSearchJSON>(body, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-ddTHH:mm:ss" });
+                    IEnumerable<Result> results = findByAccount(resultJSON.accountID).OrderByDescending(r => r.finish_date).Where(r => r.isPassed == resultJSON.isPassed);
                     if (resultJSON.startDate != null) results = results.Where(r => r.finish_date >= resultJSON.startDate);
                     if (resultJSON.endDate != null) results = results.Where(r => r.finish_date <= resultJSON.endDate);
-                    return results.ToList();
+                return results.Select(r => r.GetResultTableJSON(r.game, r.account)).ToList();
                 }
-/*            }
+            }
             catch
             {
                 return StatusCode(404);
-            }*/
+            }
         }
 
         [HttpDelete("/[controller]/delete")]
@@ -97,10 +99,10 @@ namespace backendProject.Controllers
         [HttpGet("/[controller]/scoretable")]
         public ActionResult<IEnumerable<ResultTableJSON>> getScoreTable()
         {
-            //try
-            //{
+            try
+            {
                 return _context.Results.OrderByDescending(r => r.finish_date).Select(r => r.GetResultTableJSON(r.game, r.account)).ToList();
-            //} catch { return StatusCode(404); }
+            } catch { return StatusCode(404); }
         }
 
         [HttpGet("/[controller]/scoretable/player")]
@@ -126,7 +128,7 @@ namespace backendProject.Controllers
 
         private IEnumerable<Result> findByAccount(int accID)
         {
-            return _context.Results.Where(r => r.account == _context.Accounts.Find(accID));
+            return _context.Results.Include(res => res.game).Include(res => res.account).Where(r => r.account == _context.Accounts.Find(accID));
         }
 
 

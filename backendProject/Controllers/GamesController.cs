@@ -26,28 +26,11 @@ namespace backendProject.Controllers
             try
             {
                 return _context.Games.Include(game => game.textToWrite).ToList();
-            }catch
-            {
-                //return new List<Game>();
+            } catch {
                 return StatusCode(404);
             }
         }
 
-        /*        [HttpPost("/[controller]/add")]
-                [Models.Context.ReadableBodyStream]
-                public ActionResult Add(string gameName, int textID, Difficulty diff)
-                {
-                    try
-                    {
-                        WritingText textToAdd = _context.WritingTexts.Find(textID);
-                        if (textToAdd == null) throw new Exception();
-                        Game game = new Game(gameName, textToAdd, (Difficulty)diff);
-                        game.wordCount = textToAdd.wordCount;
-                        _context.Games.Add(game);
-                        _context.SaveChanges();
-                        return StatusCode(200);
-                    } catch { return StatusCode(404); }
-                }*/
 
         [HttpPost("/[controller]/add")]
         public async Task<ActionResult> AddAsync()
