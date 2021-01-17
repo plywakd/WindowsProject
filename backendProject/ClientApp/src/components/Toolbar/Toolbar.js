@@ -18,7 +18,7 @@ class Toolbar extends React.Component{
 		return (
 			<div className="toolbar-container">
 				<div className="toolbar-item">
-					Speed up your typing!
+					<h2>Speed up your typing!</h2>
 				</div>
 				<div className="toolbar-item">
 					<img src = {keyboardLogo} alt="projLogo" className="logo"/>
