@@ -43,7 +43,7 @@ namespace backendProject.Controllers
                     _context.Results.Add(result);
                     _context.SaveChanges();
 
-                    return StatusCode(200);
+                    return StatusCode(201);
                 }
             }
             catch { return StatusCode(404); }
@@ -69,7 +69,7 @@ namespace backendProject.Controllers
                 using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
                 {
                     string body = await stream.ReadToEndAsync();
-                if (body == "") return StatusCode(407);
+                if (body == "") return StatusCode(404);
                 ResultSearchJSON resultJSON = JsonConvert.DeserializeObject<ResultSearchJSON>(body, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-ddTHH:mm:ss" });
                     IEnumerable<Result> results = findByAccount(resultJSON.accountID).OrderByDescending(r => r.finish_date).Where(r => r.isPassed == resultJSON.isPassed);
                     if (resultJSON.startDate != null) results = results.Where(r => r.finish_date >= resultJSON.startDate);

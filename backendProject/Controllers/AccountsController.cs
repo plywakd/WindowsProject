@@ -64,7 +64,7 @@ namespace backendProject.Controllers
                     Account acc = accJSON.getAccount();
                     _context.Accounts.Add(acc);
                     _context.SaveChanges();
-                    return StatusCode(200);
+                    return StatusCode(201);
                }
             }
             catch (Exception e)
