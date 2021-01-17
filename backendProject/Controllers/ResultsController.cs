@@ -94,6 +94,36 @@ namespace backendProject.Controllers
             catch (Exception e) { return StatusCode(404); }
         }
 
+        [HttpGet("/[controller]/scoretable")]
+        public ActionResult<IEnumerable<ResultTableJSON>> getScoreTable()
+        {
+            //try
+            //{
+                return _context.Results.OrderByDescending(r => r.finish_date).Select(r => r.GetResultTableJSON(r.game, r.account)).ToList();
+            //} catch { return StatusCode(404); }
+        }
+
+        [HttpGet("/[controller]/scoretable/player")]
+        public ActionResult<IEnumerable<ResultTableJSON>> getScoreTableByAccount(int accId)
+        {
+            try
+            {
+                return _context.Results.OrderByDescending(r => r.finish_date).Where(r => r.account == _context.Accounts.Find(accId)).Select(r => r.GetResultTableJSON(r.game, r.account)).ToList();
+            }
+            catch { return StatusCode(404);
+    }
+}
+
+        [HttpGet("/[controller]/scoretable/game")]
+        public ActionResult<IEnumerable<ResultTableJSON>> getScoreTableByGame(int gameId)
+        {
+            try
+            {
+                return _context.Results.OrderByDescending(r => r.finish_date).Where(r => r.game == _context.Games.Find(gameId)).Select(r => r.GetResultTableJSON(r.game, r.account)).ToList();
+            }
+            catch { return StatusCode(404); }
+        }
+
         private IEnumerable<Result> findByAccount(int accID)
         {
             return _context.Results.Where(r => r.account == _context.Accounts.Find(accID));

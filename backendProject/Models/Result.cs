@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace backendProject.Models
 {
@@ -29,6 +26,11 @@ namespace backendProject.Models
             mistakes = m;
             isPassed = ws >= game.minWordspeed && mistakes <= game.maxMistakes;
         }
+
+        public ResultTableJSON GetResultTableJSON(Game game, Account account)
+        {
+            return new ResultTableJSON(this, game, account);
+        }
     }
 
     public class ResultJSON
@@ -36,7 +38,6 @@ namespace backendProject.Models
         public int gameID { get; set; }
         public string username { get; set; }
         public double wordSpeed { get; set; }
-        //public int accountID { get; set; }
         public int mistakes { get; set; }
 
         public Result getResult(Game game, Account account)
@@ -52,5 +53,27 @@ namespace backendProject.Models
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
 
+    }
+
+    public class ResultTableJSON
+    {
+        public int ID { get; set; }
+        public string game { get; set; }
+        public double wordSpeed { get; set; }
+        public string account { get; set; }
+        public DateTime finish_date { get; set; }
+        public bool isPassed { get; set; }
+        public int mistakes { get; set; }
+
+        public ResultTableJSON (Result result, Game game, Account account)
+        {
+            this.ID = result.ID;
+            this.game = game.gameName;
+            this.wordSpeed = result.wordSpeed;
+            this.account = account.Username;
+            this.finish_date = result.finish_date;
+            this.isPassed = result.isPassed;
+            this.mistakes = result.mistakes;
+        }
     }
 }
