@@ -28,11 +28,12 @@ class SubMenu extends React.Component {
 	}
 
 	handleParam = (toRecognize) => {
+		console.log(toRecognize);
 		if (typeof (toRecognize) === 'string') {
 			let date = new Date(toRecognize);
 			return date.toString()
 		}
-		else if (typeof (toRecognize) === 'object') {
+		if (typeof (toRecognize) === 'object') {
 			if (Object.keys(toRecognize).includes("username")) {
 				return toRecognize.username
 			}
@@ -77,7 +78,7 @@ class SubMenu extends React.Component {
 
 		else if (this.props.isLogged === true && Object.keys(this.state.game).length != 0 && this.props.showRanking === false) {
 			subMenu = (
-				<MainMenu mainText={this.state.game.textToWrite.text} username={this.props.username} gameId={this.state.game.id}></ MainMenu>);
+				<MainMenu mainText={this.state.game.textToWrite.text} username={this.props.username} gameId={this.state.game.id} textId={this.state.game.textToWrite.id}></ MainMenu>);
 		}
 
 		else if (this.props.isLogged === true && this.props.showRanking === true) {
@@ -100,7 +101,8 @@ class SubMenu extends React.Component {
 								{
 									res.map((r,i) => (
 										<tr key={i}>{
-											Object.values(r).map((resval, j) => <td key={j}>{(Object.keys(resval).length !=0) ? this.handleParam(resval) : resval.toString()}</td>)
+											//Object.values(r).map((resval, j) => <td key={j}>{(Object.keys(resval).length !=0) ? this.handleParam(resval) : resval.toString()}</td>)
+											Object.values(r).map((resval, j) => <td key={j}>{resval.toString()}</td>)
                                         }
 										</tr>
 									))
@@ -110,10 +112,6 @@ class SubMenu extends React.Component {
                     }
                 }
             }
-		}
-
-		if (this.state.game_tmp === true) {
-			subMenu = <MainMenu></MainMenu>
 		}
 		return (
 			<div className="user-menu-container">

@@ -83,8 +83,8 @@ class Content extends React.Component{
 	handleRanking(event) {
 		event.preventDefault();
 		this.setState({ gameMenu: false }, () => this.setState({ showRanking: true }));
-		//const backend_url = 'https://localhost:44306/Results/scoretable';
-		const backend_url = 'https://localhost:44306/Results';
+		const backend_url = 'https://localhost:44306/Results/scoretable';
+		//const backend_url = 'https://localhost:44306/Results';
 		axios.get(backend_url).
 			then(response => {
 				console.log(response.data);

@@ -7,7 +7,7 @@ class MainMenu extends React.Component {
         super(props);
         this.wpmString = " words/min";
         this.state = {
-            whiteText: "Tylko jedno w glowie mam, koksu 5 gram...",
+            whiteText: "Tylko jedno w glowie mam...",
             greenText: "",
             wpm: "0" + this.wpmString,
             spaceCounter: 0,
@@ -20,13 +20,13 @@ class MainMenu extends React.Component {
     }
 
     componentDidMount() {
-        console.log("GAME component");
         this.setState({ whiteText: this.props.mainText })
     }
 
     handleSubmitResult = () => {
         console.log("check params " + this.props.username + "," + this.props.gameId + "," + this.state.mistakes);
         const backend_url = 'https://localhost:44306/Results/add';
+        const backend_url_txt = 'https://localhost:44306/WritingTexts/updateSpeeds';
         axios.post(backend_url, {
             username: this.props.username,
             gameID: this.props.gameId,
@@ -34,7 +34,17 @@ class MainMenu extends React.Component {
             mistakes: this.state.mistakes
         }).
             then(response => {
-                console.log("Result send? " +response.status)
+                console.log(this.props.textId);
+                if (response.status == 201 || response.status == 200) {
+                    axios.put(backend_url_txt, {}, {
+                        params: {
+                        id: this.props.textId
+                    }
+                    }).
+                        then(response => {
+                            console.log("Updated results and writing text");
+                        })
+                }
             });
     }
 
